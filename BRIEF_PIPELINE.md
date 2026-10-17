@@ -2,6 +2,17 @@
 
 Read `CLAUDE.md` and `ROADMAP.md` first. You own `/pipeline`. Your job: turn an order into a pack of posters and messages, using Render Workflows in a way that is real and creative (a separate award depends on it).
 
+## Status (Oct 18): code done, Render not verified. Your remaining tasks, in order
+
+Tasks 1-6 below are written and pass locally (`pipeline/README.md` explains the design). Read the code before changing it. What is left:
+
+1. **Create the Workflow service on Render** (README.md "Deploy on Render", step 2): Docker runtime, Singapore, start command `python -m pipeline.workflow`, `DATABASE_URL` = internal connection string. Then, with Om, set `RENDER_API_KEY` and `WORKFLOW_SLUG` on the web service.
+2. **Prove it runs on Render:** start `generate_pack` from the dashboard with `[<order_id>]` for an existing order, then make a new order through the site. Check that Hindi renders correctly in the stored PNGs (download one), the `pack_started` event says `runner: render_workflows`, and a re-run adds no rows.
+3. **Measure and write it up:** time from order to preview_ready on Workflows vs the local fallback, task count, any retries. Replace the `[TODO]` in `pipeline/README.md`, then paste the Workflows section into `SUBMISSION.md`. If Workflows does not work by 1:00 PM, follow the fallback at the bottom and say so plainly.
+4. **Make a QA failure visible** for the demo (acceptance criterion: "a mix of passed and failed QA items"): an order with a very long shop name or offer shows the simple-layout retry and its notes in `/admin/orders/{id}`.
+5. **Native-speaker review** of `pipeline/copy_library/diwali.json` (Hindi, Marathi). Previously Aditya's task; ask anyone you trust who reads Marathi and Hindi.
+6. **Demo video** (moved from Aditya, outline in `BRIEF_OPS.md`): record by 4:30 PM. Only real numbers; label the sample shop as a sample.
+
 ## Task order and time budgets
 
 ### 1. Rendering spike (45 min max, do this first)
@@ -24,7 +35,7 @@ Test options in this order and stop at the first that works (look at the output 
 
 ### 3. Copy generation
 
-`generate_copy(order) -> dict` returns poster headlines and three WhatsApp messages plus a review-request message for each language. Use an LLM with a short prompt, and **always fall back to a human-written copy library** (`/pipeline/copy_library/`) per festival and language when the LLM fails or returns something invalid. Ask Aditya to get native-speaker review of Hindi and Marathi copy.
+`generate_copy(order) -> dict` returns poster headlines and three WhatsApp messages plus a review-request message for each language. Use an LLM with a short prompt, and **always fall back to a human-written copy library** (`/pipeline/copy_library/`) per festival and language when the LLM fails or returns something invalid. Native-speaker review of Hindi and Marathi copy is now your task (see Status above).
 
 ### 4. Workflows (Phase 2)
 

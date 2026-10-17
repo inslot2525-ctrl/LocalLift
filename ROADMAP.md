@@ -15,15 +15,17 @@ All times are IST. The build started Oct 17 10:00 AM; this plan starts at about 
 
 ## Build phases
 
-| Phase | Time | Goal | Exit check |
-|---|---|---|---|
-| 0 Setup | now to ~1:00 AM | Repo, CLAUDE.md, schema, Render project and Postgres, env vars. Read the sponsor brief and rules. Claim the $50 Render credit if still possible | Rendering spike done (see BRIEF_PIPELINE). Deploy hello-world web + hello-world workflow task |
-| 1 Vertical slice | 1:00-4:30 AM | Form -> one template -> watermarked preview, deployed | A stranger opens the link and gets a preview |
-| Sleep | 4:30-9:00 AM | About 4 hours. Set alarms | |
-| 2 Core | 9:00 AM-1:00 PM | Workflows fan-out + quality gate, paywall with UPI confirmation, 3 templates, languages, rep ledger | One full paid pack, end to end |
-| 3 Real use | 1:00-3:30 PM | Hardening, `/sample` demo mode, 3 real shops served | At least one real payment |
-| 4 Freeze | 3:30-6:30 PM | **No new features after 3:30 PM.** Demo video, README, limitations, description. Live link verified by 6:00 PM | Link works from a fresh phone |
-| 5 Submit | 6:30-10:00 PM | Peer feedback, fixes, submit by 9:30 PM | Submitted with 30 minutes spare |
+**Team change (Oct 18):** Aditya has handed over. Ayush and Om own all remaining work. The code for phases 0-2 is written and passes locally, ahead of plan, but **nothing is deployed yet**, so deployment is now the first job.
+
+| Phase | Time | Goal | Status / exit check | Owner |
+|---|---|---|---|---|
+| 0 Setup | done | Repo, schema, rendering spike | Done. Devanagari verified (Pillow + RAQM + libfribidi) | |
+| 1 Vertical slice | done locally | Form -> templates -> watermarked preview | Done locally. Exit check still open: a stranger opens the **live** link and gets a preview | |
+| 2 Core | done locally | Workflows fan-out + QA, UPI paywall, 3 templates, 3 languages, rep ledger | Code done; smoke test passes locally. Workflows not yet run on Render | |
+| 2b Deploy | first thing on waking | Claim Render credits. Blueprint (web + Postgres), env vars, Workflow service, connect them | Live URL passes `tests/smoke.py`; one order shows `runner: render_workflows` | Om (web, DB), Ayush (Workflow service) |
+| 3 Real use | until 3:30 PM | Real UPI test on a phone, phone-width check, native review of hi/mr copy, 3 real shops served | At least one real payment | Om (UPI, phone check), both (shops) |
+| 4 Freeze | 3:30-6:30 PM | **No new features after 3:30 PM.** Demo video, limitations, description, measured Workflows numbers. Live link verified by 6:00 PM | Link works from a fresh phone | Ayush (video, Workflows section), Om (SUBMISSION.md) |
+| 5 Submit | 6:30-10:00 PM | Peer feedback, fixes, submit by 9:30 PM | Submitted with 30 minutes spare | Om submits; both online 6:30-10 PM |
 
 **Cut list if behind (cut in this order):** monthly subscription, A4 print layout, rep dashboard UI (keep the ledger table and an admin view), Marathi (keep English + Hindi), extra templates.
 
@@ -31,10 +33,10 @@ All times are IST. The build started Oct 17 10:00 AM; this plan starts at about 
 
 | Phase | When | Action | Owner |
 |---|---|---|---|
-| D0 Prep | tonight to noon Oct 18 | Message people who know shop owners or could be reps. Write the shop pitch and rep script. Line up 3 shops for the afternoon | Aditya |
-| D1 First sales | Oct 18 afternoon | Generate a pack live in front of the shop owner and close for UPI. Record real orders | All |
-| D2 Rep activation | Oct 19-25 | Recruit and onboard reps, daily outreach and demos, run the pricing test | Aditya + all |
-| D3 Festive peak | Oct 26-Nov 10 | Push the festive bundle before Dhanteras; test a monthly offer subscription | All |
+| D0 Prep | by noon Oct 18 | Message people who know shop owners or could be reps. Line up 3 shops for the afternoon. Pitch and rep scripts are already in `BRIEF_OPS.md` | Ayush + Om (not started) |
+| D1 First sales | Oct 18 afternoon | Generate a pack live in front of the shop owner and close for UPI. Record real orders | Ayush + Om |
+| D2 Rep activation | Oct 19-25 | Recruit and onboard reps, daily outreach and demos, run the pricing test | Ayush + Om |
+| D3 Festive peak | Oct 26-Nov 10 | Push the festive bundle before Dhanteras; test a monthly offer subscription | Ayush + Om |
 
 ## Channels
 
@@ -56,7 +58,8 @@ All times are IST. The build started Oct 17 10:00 AM; this plan starts at about 
 
 | Risk | Mitigation |
 |---|---|
-| Devanagari text renders wrong | Spike in phase 0 before anything else |
+| Devanagari text renders wrong | Resolved: needs `libfribidi0`, installed by the Dockerfile. Never deploy without the Dockerfile |
+| Two people doing three people's work | Distribution is the 40% criterion; do not let deployment polish eat the afternoon shop visits. Cut list still applies |
 | Render Workflows is beta (no cron, no checkpointing) | Make every task safe to rerun (idempotent) |
 | Manual payment confirmation | State it as a limitation; revisit a payment gateway later |
 | Reps cheat or underperform | Commission only on confirmed payment; simple written terms |

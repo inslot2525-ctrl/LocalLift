@@ -2,6 +2,30 @@
 
 Read this file first in every session. Then read `ROADMAP.md` and your own brief (`BRIEF_PIPELINE.md`, `BRIEF_WEB.md` or `BRIEF_OPS.md`). If you are not sure which brief is yours, ask the human.
 
+## Status and handover (updated Oct 18, early morning IST)
+
+**Aditya has handed over and is not working on the project for now. Ayush and Om own everything from here.** Do not assign tasks to Aditya or wait on him.
+
+**Built and pushed to `main`** (one session built both folders, so the per-folder split below describes ownership from now on, not who wrote what):
+- `pipeline/`: Pillow + RAQM renderer (Hindi/Marathi verified by eye), 3 templates x 3 sizes, automatic QA with a simple-layout retry, watermarked previews, LLM copy with a human-written fallback library (en/hi/mr), Render Workflows tasks (`workflow.py`), `trigger_pack` (`api.py`) with a local thread-pool fallback.
+- `web/`: every route in `BRIEF_WEB.md` (form, previews with live progress, UPI pay page, admin approve/reject, rep ledger, downloads + ZIP, `/r/{code}`, `/sample`, `/admin/funnel`), rate limit, upload checks, unguessable order and download tokens.
+- `Dockerfile` (installs `libfribidi0`, required for Devanagari), `docker-compose.yml`, `render.yaml`, `tests/smoke.py` (22-step end-to-end test: **passes locally**), `tests/render_samples.py` (27 posters: all pass QA).
+- `pipeline/README.md` has the rendering findings and the Workflows write-up for the submission. `README.md` has the deploy steps.
+
+**Not done or not verified yet** (the critical path to 6:30 PM; owners in the briefs):
+1. Nothing is deployed. Render account, credits, Blueprint and Workflow service: **Om** (deploy) with **Ayush** (Workflow service).
+2. Render Workflows has never run on Render. Until it has, the submission must not claim it; the app falls back to rendering inside the web service.
+3. The UPI deep link and QR are untested on a real phone.
+4. The pages have not been checked at phone width in a real browser.
+5. Hindi and Marathi copy has had no native-speaker review.
+6. Schema additions below need Ayush and Om to agree (Aditya is away, so two of three is the quorum for now).
+7. No real shops, no traction yet. Distribution work moved to Ayush and Om (`BRIEF_OPS.md`).
+
+**Schema additions beyond the contract** (in `shared/schema.sql`, pending agreement):
+- `orders.view_token text unique`: order and preview pages use it instead of the numeric id.
+- `create unique index ledger_order_uniq on ledger(order_id)`: approving twice cannot pay a commission twice.
+- Message rows use `template_id` as the slot: `wa1`, `wa2`, `wa3`, `review`, `headline`. The contract's empty string would let the unique key hold only one message per language. The `headline` row stores the poster headline so re-runs reuse it.
+
 ## What we are building
 
 LocalLift gives small local shops done-for-you marketing packs (offer posters, WhatsApp messages, review requests) in their own language, delivered in minutes. Student reps sell and set up packs in person and earn a commission on every confirmed sale. Version 1 covers **festive offer packs** only (Diwali first). Do not build general marketing features.
@@ -41,14 +65,15 @@ Flow:
 ## Repo layout and ownership
 
 ```
-/pipeline   Ayush   rendering, copy, Render Workflows tasks
-/web        Om      FastAPI app, UI, payments, admin, deploy
-/ops        Aditya  outreach docs, scripts, CRM, traction ledger, demo assets
-/shared             schema.sql and any shared types (change only with all three agreeing)
+/pipeline   Ayush        rendering, copy, Render Workflows tasks
+/web        Om           FastAPI app, UI, payments, admin, deploy
+/ops        Ayush + Om   outreach docs, scripts, CRM, traction ledger, demo assets (was Aditya's; see BRIEF_OPS.md)
+/shared                  schema.sql and the DB helper (change only with Ayush and Om agreeing while Aditya is away)
+/tests                   smoke test and render samples (anyone may edit; keep them passing)
 CLAUDE.md  ROADMAP.md  BRIEF_*.md  SUBMISSION.md
 ```
 
-Edit only your own folder. If you need a change elsewhere, tell the human to ask the owner.
+Edit only your own folder. If you need a change elsewhere, tell the human to ask the owner. `SUBMISSION.md` is owned by Om (see `BRIEF_OPS.md`); anyone may add to its limitations list.
 
 ## Data contract (schema.sql)
 
@@ -107,22 +132,22 @@ create table events (
 Interface between web and pipeline:
 - `/pipeline/api.py: trigger_pack(order_id: int) -> str` starts the Render Workflow and returns a run id.
 - The pipeline writes `pack_items` rows and sets their `qa_status`. The web app polls the database; it never calls pipeline internals.
-- Until the real pipeline works, `trigger_pack` is stubbed to write placeholder images so web work is never blocked.
+- If `RENDER_API_KEY` or `WORKFLOW_SLUG` is unset, or the workflow fails to start, `trigger_pack` runs the same steps in a background thread in the web service and returns `local-<id>`. The `pack_started` event's `meta.runner` records which path ran (`render_workflows` or `local`).
 
 ## Working agreements for Claude Code sessions
 
-- Branches: `ayush/pipeline`, `om/web`, `aditya/ops`. Merge to `main` at least hourly. **`main` must always deploy.**
-- Run the app and your tests locally before merging. Never push a broken `main`.
+- Branches: `ayush/pipeline`, `om/web` (create them from `main`; `aditya/ops` is stale, do not use it). Merge to `main` at least hourly. **`main` must always deploy.**
+- Run the app and your tests locally before merging: `docker compose up --build`, then `python tests/smoke.py http://localhost:8000 localadmin`. Never push a broken `main`. Run renders through Docker: Pillow on Windows has no RAQM and draws Hindi/Marathi wrong.
 - Small commits with a folder prefix, for example `pipeline: add quality check`.
 - Tell the human before adding a dependency. Prefer pip-installable packages with no system libraries, unless we add a Dockerfile.
 - Log analytics events (see the `events` table) for every step of the funnel.
 - Time-box every task using the budgets in your brief. If you exceed a budget, stop, summarize the blocker and propose the fallback.
-- Checkpoints where all three integrate and test together: 4:00 AM, 1:00 PM, 3:30 PM (IST). Feature freeze at 3:30 PM on Oct 18.
+- Checkpoints where Ayush and Om integrate and test together: 1:00 PM, 3:30 PM (IST). Feature freeze at 3:30 PM on Oct 18.
 
 ## Unverified assumptions (check, do not assume)
 
-- Render Workflows SDK details and whether system libraries (fonts, shaping, image tools) are available inside a task container.
-- Devanagari (Hindi/Marathi) text shaping in whichever renderer we pick.
+- Render Workflows on Render itself: the code follows Render's Python SDK docs (`render>=1.0.1`, `Workflows`, `@app.task`, `ctx.run`, `Render().workflows.start_task("<slug>/<task>", [args])`) but has never run there. Docker-based Workflow services can only be created in the Dashboard.
+- Settled: Devanagari shaping works with Pillow + RAQM when `libfribidi0` is installed (see `pipeline/README.md`).
 - UPI deep-link format works in common UPI apps. The common format is `upi://pay?pa=<vpa>&pn=<name>&am=<amount>&cu=INR&tn=<note>`; test it on a real phone.
 - Legal and tax treatment of commissions, GST on sales, and data-protection obligations. We have not researched these.
 - Whether reps count under the hackathon rules (teams are up to 3 members; reps are not team members).

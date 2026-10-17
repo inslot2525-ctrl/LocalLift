@@ -2,6 +2,18 @@
 
 Read `CLAUDE.md` and `ROADMAP.md` first. You own `/web` and `shared/schema.sql`. Your job: the app a shop owner or rep uses, the payment flow, the admin, and deployment. A random team will test the live link at 6:30 PM on Oct 18, so it must work for strangers.
 
+## Status (Oct 18): code done, not deployed. Your remaining tasks, in order
+
+Phases 0-3 below are written and the end-to-end smoke test passes locally. Routes differ slightly from this brief: the order page is `/o/{view_token}` (not `/order/{id}`), the pay page `/pay/{view_token}`, and downloads `/d/{download_token}`. What is left:
+
+1. **Claim the Render credits** (check Discord or the dashboard) before creating paid services. Check whether they cover Workflows compute.
+2. **Deploy** with the Blueprint (`render.yaml`; steps in `README.md`). Set `ADMIN_PASSWORD` and `UPI_VPA`. Consider a paid Postgres plan: the free one expires in 30 days with no backups, and orders and the ledger live there. If you upgrade, remove that line from the `SUBMISSION.md` limitations.
+3. **Run `python tests/smoke.py <live-url> <admin-password>`** against the live site. It creates an order for "Smoke Test Store" and a rep `SMOKE`: reject or ignore that order and deactivate the rep afterwards so they do not count as traction.
+4. **Test UPI on a real phone** with Rs 1-10 (set `PRICE_STARTER` low temporarily, or pay the real amount to yourselves). Try at least two UPI apps. Record the result in `SUBMISSION.md`.
+5. **Phone-width check** of every page on a real phone (not done yet).
+6. **Own the submission pack** (moved from Aditya): `SUBMISSION.md`, links, final submit by 9:30 PM. See `BRIEF_OPS.md`.
+7. After 3:30 PM, only fixes. Help Ayush with shop visits in the afternoon.
+
 ## Task order
 
 ### Phase 0 (by ~1:00 AM)
