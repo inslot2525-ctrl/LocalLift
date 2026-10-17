@@ -1,0 +1,33 @@
+{
+  "_note": "Human-written fallback copy. Placeholders: {shop}, {offer}, {phone}. Hindi and Marathi need native-speaker review before wide use.",
+  "en": {
+    "headline": "Happy Diwali!",
+    "cta": "Call / WhatsApp",
+    "whatsapp": [
+      "Happy Diwali from {shop}! 🪔\n\nThis festive season: {offer}\n\nVisit us or call/WhatsApp {phone} to order.",
+      "Diwali shopping list ready? ✨\n{shop} has a special offer for you: {offer}\n\nLimited time only. Call {phone}.",
+      "Last few days of our Diwali offer! 🎉\n{offer} at {shop}.\n\nDon't miss it. Call/WhatsApp {phone}."
+    ],
+    "review": "Thank you for shopping at {shop} this Diwali! 🙏 If you liked our service, please leave us a short Google review. It helps a small shop like ours a lot. For any help, call {phone}."
+  },
+  "hi": {
+    "headline": "दीपावली की हार्दिक शुभकामनाएँ",
+    "cta": "कॉल / व्हाट्सऐप करें",
+    "whatsapp": [
+      "{shop} की ओर से दीपावली की हार्दिक शुभकामनाएँ! 🪔\n\nइस त्योहार पर खास ऑफर: {offer}\n\nऑर्डर के लिए आइए या कॉल/व्हाट्सऐप करें: {phone}",
+      "दिवाली की खरीदारी शुरू? ✨\n{shop} में आपके लिए खास ऑफर: {offer}\n\nसीमित समय के लिए। कॉल करें: {phone}",
+      "दिवाली ऑफर के आखिरी कुछ दिन! 🎉\n{shop} में {offer}\n\nमौका न चूकें। कॉल/व्हाट्सऐप: {phone}"
+    ],
+    "review": "दिवाली पर {shop} से खरीदारी करने के लिए धन्यवाद! 🙏 अगर आपको हमारी सेवा अच्छी लगी, तो कृपया Google पर एक छोटा सा रिव्यू दें। इससे हमारी छोटी दुकान को बहुत मदद मिलती है। किसी भी मदद के लिए कॉल करें: {phone}"
+  },
+  "mr": {
+    "headline": "दिवाळीच्या हार्दिक शुभेच्छा",
+    "cta": "कॉल / व्हॉट्सॲप करा",
+    "whatsapp": [
+      "{shop} तर्फे दिवाळीच्या हार्दिक शुभेच्छा! 🪔\n\nया सणासाठी खास ऑफर: {offer}\n\nऑर्डरसाठी या किंवा कॉल/व्हॉट्सॲप करा: {phone}",
+      "दिवाळीची खरेदी सुरू? ✨\n{shop} मध्ये तुमच्यासाठी खास ऑफर: {offer}\n\nमर्यादित कालावधीसाठी. कॉल करा: {phone}",
+      "दिवाळी ऑफरचे शेवटचे काही दिवस! 🎉\n{shop} मध्ये {offer}\n\nसंधी चुकवू नका. कॉल/व्हॉट्सॲप: {phone}"
+    ],
+    "review": "दिवाळीत {shop} मधून खरेदी केल्याबद्दल धन्यवाद! 🙏 आमची सेवा आवडली असल्यास कृपया Google वर एक छोटा रिव्ह्यू द्या. आमच्यासारख्या छोट्या दुकानाला त्याची खूप मदत होते. कोणत्याही मदतीसाठी कॉल करा: {phone}"
+  }
+}
