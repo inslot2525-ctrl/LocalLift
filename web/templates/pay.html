@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="text-2xl font-bold text-rose-900">Unlock your pack</h1>
+<p class="text-stone-600">{{ order.shop_name }}</p>
+<div class="mt-4 space-y-2">
+  {% for key, p in PLANS.items() %}
+  <a href="/pay/{{ order.view_token }}?plan={{ key }}" class="flex justify-between items-center border-2 rounded-xl p-3 {% if key == plan %}border-rose-800 bg-white{% else %}border-stone-200{% endif %}">
+    <span><span class="font-semibold">{{ p.name }}</span><br><span class="text-xs text-stone-600">{{ p.desc }}</span></span>
+    <span class="text-xl font-bold ml-3">₹{{ p.price }}</span></a>
+  {% endfor %}
+</div>
+<div class="mt-5 bg-white rounded-xl p-4 shadow-sm text-center">
+  {% if upi %}
+    <div class="font-semibold">Pay ₹{{ amount }} by UPI</div>
+    <a href="{{ upi }}" class="mt-3 inline-block bg-rose-800 text-white font-semibold px-6 py-3 rounded-xl">Open UPI app</a>
+    <p class="text-sm text-stone-600 mt-3">or scan with any UPI app:</p>
+    <img src="{{ qr }}" alt="UPI QR code" class="mx-auto mt-2 w-48 h-48">
+    <p class="text-sm mt-2">UPI ID: <b class="select-all">{{ vpa }}</b> · Amount: <b>₹{{ amount }}</b></p>
+  {% else %}
+    <p class="text-red-800">Payments are not set up yet on this server.</p>
+  {% endif %}
+</div>
+<form method="post" action="/pay/{{ order.view_token }}" class="mt-5 space-y-3">
+  <input type="hidden" name="plan" value="{{ plan }}">
+  {% if error %}<div class="bg-red-100 border border-red-300 text-red-900 rounded-lg p-3 text-sm">{{ error }}</div>{% endif %}
+  <label class="block"><span class="font-semibold">After paying, enter the UPI transaction ID (UTR)</span>
+    <input name="payment_ref" required maxlength="40" placeholder="e.g. 4321 5678 9012" class="mt-1 w-full rounded-lg border-stone-300 border p-3 text-lg"></label>
+  <button class="w-full bg-rose-800 text-white font-semibold py-4 rounded-xl text-lg">I have paid</button>
+  <p class="text-xs text-stone-500">We check each payment by hand, usually within a few hours, then your download link appears on your order page.</p>
+</form>
+{% endblock %}

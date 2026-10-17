@@ -1,0 +1,25 @@
+# Local dev: docker compose up --build, then open http://localhost:8000
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: locallift
+      POSTGRES_PASSWORD: locallift
+      POSTGRES_DB: locallift
+    ports: ["5433:5432"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U locallift"]
+      interval: 2s
+      retries: 20
+  web:
+    build: .
+    ports: ["8000:8000"]
+    environment:
+      DATABASE_URL: postgresql://locallift:locallift@db:5432/locallift
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-localadmin}
+      UPI_VPA: ${UPI_VPA:-sample@upi}
+      UPI_NAME: LocalLift
+      LLM_PROVIDER: ${LLM_PROVIDER:-}
+      LLM_API_KEY: ${LLM_API_KEY:-}
+    depends_on:
+      db: {condition: service_healthy}

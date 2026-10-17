@@ -1,0 +1,39 @@
+# Pipeline: how a pack is made
+
+## Rendering (spike result, Oct 17)
+
+- **Chosen: Pillow + RAQM** (option A in the brief). Verified by looking at the output: Hindi `दीपावली की हार्दिक शुभकामनाएँ` and Marathi `दिवाळीच्या हार्दिक शुभेच्छा` render with correct conjuncts and matras (`spike_fribidi.png`).
+- **It needs one system library, `libfribidi0`.** Pillow's wheels bundle RAQM and HarfBuzz but load FriBiDi from the system. Without it (Windows, or a bare `python:3.12-slim` container), `features.check("raqm")` is False and Devanagari renders broken: the reph in हार्दिक and the conjunct in शुभेच्छा come apart. So both the web service and the Workflow service run from our `Dockerfile`, which installs it.
+- Fonts: Noto Sans Devanagari and Noto Sans (SIL Open Font License 1.1, `fonts/OFL.txt`). The Devanagari font has no Latin letters, so text is split into script runs and each run is drawn with the right font.
+
+## Pack contents per order
+
+For each chosen language: 3 designs (diya, rangoli, lantern) x 3 sizes (status 1080x1920, square 1080x1080, A4 2480x3508) = 9 posters, plus 3 WhatsApp messages, 1 review request and the poster headline. Two languages = 18 posters + 10 text items. The preview shows everything watermarked; the plan decides what the download unlocks (starter: diya only; bundle: all three).
+
+## How we use Render Workflows
+
+`pipeline/workflow.py` is a Render Workflows service (start command `python -m pipeline.workflow`, Docker runtime, same image as the web app). The web app calls `trigger_pack(order_id)` (`pipeline/api.py`), which starts the `generate_pack` task through the Render Python SDK (`Render().workflows.start_task("<slug>/generate_pack", [order_id])`).
+
+```
+generate_pack(order_id)                        parent task, timeout 15 min, 1 retry
+ ├─ write_copy(order_id)                       LLM copy -> validated -> stored; falls back to the human-written library
+ ├─ render_poster(order, lang, size, design)   one task per poster, all started at once with asyncio.gather,
+ │    x 9 per language                         each on its own instance; renders, runs QA, retries once with a
+ │                                             simpler layout if QA fails, stores PNG + watermarked preview
+ └─ bundle_pack(order_id)                      pack-level audit: counts passed/failed items, records preview_ready
+```
+
+- **Fan-out:** a 2-language order starts 18 `render_poster` runs in parallel. A4 posters are the slow ones; running them in parallel should keep preview time close to one A4 render plus instance start-up. [TODO: measure on Render and replace with real numbers. Locally, the thread-pool fallback made a 2-language pack in about 9 s.]
+- **Retries and timeouts per task:** default 2 retries with exponential backoff (2 s, x2), `render_poster` 180 s, `write_copy` 120 s, `bundle_pack` 60 s.
+- **Idempotency:** Workflows is in beta (no checkpointing), so every task checks the database first and writes with `on conflict do nothing` on the unique key (order, kind, language, size, template). Retrying a task, or re-running the whole workflow for an order, never duplicates items. `write_copy` stores the headline so a re-run reuses the same copy rather than calling the LLM again.
+- **Quality gate inside each render task** (`qa.py`): text inside a safe margin, no overlapping lines, WCAG contrast (4.5:1, or 3:1 for large text), the phone number and full offer text present on the poster, and every character covered by the font (no missing-glyph boxes). Failures are recorded in `pack_items.qa_status`/`qa_notes` and shown in the admin order view.
+- **Fallback:** if `RENDER_API_KEY`/`WORKFLOW_SLUG` are not set, or the workflow cannot be started, `trigger_pack` runs the same steps in a thread pool inside the web service and records `runner: local` on the `pack_started` event, so we can always tell which path produced a pack.
+
+## Running locally
+
+```
+docker build -t locallift .
+docker run --rm -v "$PWD/out:/out" locallift python -m tests.render_samples /out   # all designs, sizes, languages + QA
+docker compose up --build                                                          # full app on :8000
+python tests/smoke.py http://localhost:8000 localadmin                             # end-to-end check
+```

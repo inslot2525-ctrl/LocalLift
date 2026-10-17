@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}LocalLift admin{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-bold">Admin</h1>
+<p class="text-sm"><a class="underline" href="/admin/funnel">Funnel</a> · <a class="underline" href="#ledger">Ledger</a> · <a class="underline" href="#reps">Reps</a></p>
+<h2 class="font-semibold text-lg mt-5">Orders</h2>
+<div class="overflow-x-auto"><table class="text-sm w-full bg-white">
+<tr class="text-left bg-stone-100"><th class="p-2">#</th><th>Shop</th><th>Status</th><th>Plan</th><th>₹</th><th>UTR</th><th>Rep</th><th>Items</th><th></th></tr>
+{% for o in orders %}
+<tr class="border-t align-top">
+  <td class="p-2"><a class="underline" href="/admin/orders/{{ o.id }}">{{ o.id }}</a>{% if o.is_sample %} <span class="text-sky-700">sample</span>{% endif %}</td>
+  <td>{{ o.shop_name }}<br><span class="text-xs text-stone-500">{{ o.phone }} · {{ o.languages|join(',') }} · {{ o.created_at.strftime('%d %b %H:%M') }}</span></td>
+  <td>{{ o.status }}</td><td>{{ o.plan }}</td><td>{{ o.amount_inr }}</td><td class="font-mono text-xs">{{ o.payment_ref or '' }}</td>
+  <td>{{ o.rep_code or '' }}</td><td>{{ o.items }}{% if o.failed %} <span class="text-red-700">({{ o.failed }} QA failed)</span>{% endif %}</td>
+  <td class="whitespace-nowrap">{% if o.status == 'awaiting_confirmation' %}
+    <form method="post" action="/admin/orders/{{ o.id }}/approve" class="inline"><button class="bg-green-700 text-white px-2 py-1 rounded">Approve</button></form>
+    <form method="post" action="/admin/orders/{{ o.id }}/reject" class="inline"><button class="bg-red-700 text-white px-2 py-1 rounded">Reject</button></form>{% endif %}</td>
+</tr>
+{% endfor %}
+</table></div>
+<h2 id="ledger" class="font-semibold text-lg mt-8">Commission ledger</h2>
+<div class="overflow-x-auto"><table class="text-sm w-full bg-white">
+<tr class="text-left bg-stone-100"><th class="p-2">Order</th><th>Rep</th><th>UPI</th><th>₹</th><th>Status</th><th></th></tr>
+{% for l in ledger %}
+<tr class="border-t"><td class="p-2">{{ l.order_id }}</td><td>{{ l.rep_name }} ({{ l.rep_code }})</td><td>{{ l.upi_id or '' }}</td><td>{{ l.amount_inr }}</td><td>{{ l.status }}</td>
+<td>{% if l.status == 'pending' %}<form method="post" action="/admin/ledger/{{ l.id }}/approve"><button class="bg-stone-800 text-white px-2 py-1 rounded">Approve</button></form>
+{% elif l.status == 'approved' %}<form method="post" action="/admin/ledger/{{ l.id }}/paid"><button class="bg-green-700 text-white px-2 py-1 rounded">Mark paid out</button></form>{% endif %}</td></tr>
+{% else %}<tr><td class="p-2 text-stone-500" colspan="6">No commissions yet.</td></tr>{% endfor %}
+</table></div>
+<h2 id="reps" class="font-semibold text-lg mt-8">Reps</h2>
+<div class="overflow-x-auto"><table class="text-sm w-full bg-white">
+<tr class="text-left bg-stone-100"><th class="p-2">Code</th><th>Name</th><th>UPI</th><th>%</th><th>Sales</th><th>Owed ₹</th><th>Link</th><th></th></tr>
+{% for r in reps %}
+<tr class="border-t"><td class="p-2 font-mono">{{ r.code }}</td><td>{{ r.name }}</td><td>{{ r.upi_id or '' }}</td><td>{{ r.commission_pct }}</td><td>{{ r.sales }}</td><td>{{ r.owed }}</td>
+<td class="text-xs">/r/{{ r.code }}</td>
+<td><form method="post" action="/admin/reps/{{ r.code }}/toggle"><button class="border px-2 py-1 rounded">{{ 'Deactivate' if r.active else 'Activate' }}</button></form></td></tr>
+{% endfor %}
+</table></div>
+<form method="post" action="/admin/reps" class="mt-3 flex flex-wrap gap-2 text-sm">
+  <input name="code" placeholder="CODE" required class="border rounded p-2 w-24 uppercase"><input name="name" placeholder="Name" required class="border rounded p-2">
+  <input name="upi_id" placeholder="UPI ID" class="border rounded p-2"><input name="commission_pct" type="number" value="30" min="0" max="100" class="border rounded p-2 w-20">
+  <button class="bg-rose-800 text-white px-3 rounded">Add / update rep</button>
+</form>
+{% endblock %}

@@ -26,6 +26,15 @@ Add to this list whenever we find something. Current list:
 - Existing festival-poster apps and local designers compete on price.
 - Commission, tax and GST obligations have not been researched.
 - Render Workflows is in beta; no cron or checkpointing, so tasks are written to be safe to rerun.
+- Hindi and Marathi only render correctly with the RAQM layout engine, which needs the `libfribidi` system library. Without it, conjuncts break silently (no error), so we run everything from a Dockerfile that installs it. Our QA cannot detect wrong shaping, only missing glyphs.
+- The poster QA checks layout facts (margins, overlap, contrast, phone and offer present, glyph coverage). It cannot judge whether a design looks good or whether the copy is right; a human still has to look. (During the build, a line-stacking bug passed every check until we looked at the images; we then added the overlap check.)
+- Offer text is limited to 120 characters so it fits on a poster; longer offers fall back to a plain layout or fail QA.
+- The offer is printed exactly as typed. If a shop picks Hindi but types the offer in English, the poster mixes languages; we do not translate the offer.
+- Payment confirmation is matched by hand against the UTR the customer types. A customer could type someone else's UTR; the admin must check it against the bank statement before approving.
+- Self-referrals cannot be detected automatically (reps have no phone field to compare with); the admin reviews commissions before payout.
+- The rate limit (orders per IP per hour) lives in memory, so it resets on every deploy and does not work across several instances.
+- Preview and order pages use an unguessable token, but anyone who has the link can see the preview and, once paid, the download page. There are no accounts.
+- The free Render Postgres plan expires after 30 days and has no backups.
 - [TODO: add anything found during the build]
 
 ## How we used Render Workflows

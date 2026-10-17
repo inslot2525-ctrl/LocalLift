@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Order {{ order.id }}{% endblock %}
+{% block content %}
+<p><a class="underline text-sm" href="/admin">← Admin</a></p>
+<h1 class="text-xl font-bold">Order {{ order.id }}: {{ order.shop_name }} ({{ order.status }})</h1>
+<p class="text-sm">Customer page: <a class="underline" href="/o/{{ order.view_token }}">/o/{{ order.view_token }}</a></p>
+<div class="overflow-x-auto"><table class="text-sm w-full bg-white mt-4">
+<tr class="text-left bg-stone-100"><th class="p-2">Kind</th><th>Lang</th><th>Size</th><th>Template/slot</th><th>QA</th><th>Notes</th></tr>
+{% for i in posters + messages %}
+<tr class="border-t align-top"><td class="p-2">{{ i.kind }}</td><td>{{ i.language }}</td><td>{{ i.size }}</td><td>{{ i.template_id }}</td>
+<td class="{{ 'text-red-700' if i.qa_status == 'failed' else 'text-green-700' }}">{{ i.qa_status }}</td><td class="text-xs">{{ i.qa_notes or '' }}</td></tr>
+{% endfor %}
+</table></div>
+{% endblock %}

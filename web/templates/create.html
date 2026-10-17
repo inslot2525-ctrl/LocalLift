@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="text-2xl font-bold text-rose-900">Make your Diwali pack</h1>
+<p class="text-stone-600 mt-1">The preview is free. You pay only if you like it.</p>
+{% if errors %}<div class="mt-4 bg-red-100 border border-red-300 text-red-900 rounded-lg p-3 text-sm">{% for e in errors %}<div>{{ e }}</div>{% endfor %}</div>{% endif %}
+<form method="post" action="/create" enctype="multipart/form-data" class="mt-5 space-y-5">
+  <label class="block"><span class="font-semibold">Shop name</span>
+    <input name="shop_name" required maxlength="50" value="{{ form.shop_name or '' }}" placeholder="e.g. Sharma Sweets" class="mt-1 w-full rounded-lg border-stone-300 border p-3 text-lg"></label>
+  <label class="block"><span class="font-semibold">Phone number for customers</span>
+    <input name="phone" required inputmode="tel" maxlength="20" value="{{ form.phone or '' }}" placeholder="98765 43210" class="mt-1 w-full rounded-lg border-stone-300 border p-3 text-lg">
+    <span class="text-xs text-stone-500">Printed on the poster and messages.</span></label>
+  <label class="block"><span class="font-semibold">Your Diwali offer</span>
+    <textarea name="offer_text" required maxlength="120" rows="2" placeholder="20% off on all sweet boxes above Rs 500" class="mt-1 w-full rounded-lg border-stone-300 border p-3 text-lg">{{ form.offer_text or '' }}</textarea>
+    <span class="text-xs text-stone-500">Write it in the language you want on the poster. Up to 120 characters.</span></label>
+  <fieldset><legend class="font-semibold">Languages</legend>
+    <div class="mt-1 flex flex-wrap gap-2">
+      {% for code, name in LANGUAGES.items() %}
+      <label class="flex items-center gap-2 bg-white border rounded-lg px-3 py-2"><input type="checkbox" name="languages" value="{{ code }}" {% if code in (form.languages or ['en', 'hi']) %}checked{% endif %}> {{ name }}</label>
+      {% endfor %}
+    </div></fieldset>
+  <input type="hidden" name="festival" value="diwali">
+  <fieldset><legend class="font-semibold">Pack</legend>
+    <div class="mt-1 space-y-2">
+      {% for key, p in PLANS.items() %}
+      <label class="flex gap-3 bg-white border rounded-lg p-3"><input type="radio" name="plan" value="{{ key }}" {% if (form.plan or 'starter') == key %}checked{% endif %}>
+        <span><span class="font-semibold">{{ p.name }}: ₹{{ p.price }}</span><br><span class="text-sm text-stone-600">{{ p.desc }}</span></span></label>
+      {% endfor %}
+    </div>
+    <span class="text-xs text-stone-500">You can change this before paying.</span></fieldset>
+  <label class="block"><span class="font-semibold">Logo (optional)</span>
+    <input type="file" name="logo" accept="image/png,image/jpeg,image/webp" class="mt-1 block w-full text-sm">
+    <span class="text-xs text-stone-500">PNG, JPG or WEBP, up to 2 MB.</span></label>
+  <label class="block"><span class="font-semibold">Rep code (optional)</span>
+    <input name="rep_code" maxlength="16" value="{{ rep }}" class="mt-1 w-full rounded-lg border-stone-300 border p-3 uppercase"></label>
+  <button class="w-full bg-rose-800 text-white font-semibold py-4 rounded-xl text-lg">Make my free preview</button>
+</form>
+{% endblock %}
