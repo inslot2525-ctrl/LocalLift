@@ -29,6 +29,28 @@ generate_pack(order_id)                        parent task, timeout 15 min, 1 re
 - **Quality gate inside each render task** (`qa.py`): text inside a safe margin, no overlapping lines, WCAG contrast (4.5:1, or 3:1 for large text), the phone number and full offer text present on the poster, and every character covered by the font (no missing-glyph boxes). Failures are recorded in `pack_items.qa_status`/`qa_notes` and shown in the admin order view.
 - **Fallback:** if `RENDER_API_KEY`/`WORKFLOW_SLUG` are not set, or the workflow cannot be started, `trigger_pack` runs the same steps in a thread pool inside the web service and records `runner: local` on the `pack_started` event, so we can always tell which path produced a pack.
 
+## Measuring a run
+
+Time from `pack_started` to `preview_ready` per order, and which runner made it:
+
+```sql
+select s.order_id, s.meta->>'runner' as runner, extract(epoch from r.ts - s.ts)::int as seconds,
+       r.meta->>'passed' as passed, r.meta->>'failed' as failed
+from events s join events r on r.order_id = s.order_id and r.kind = 'preview_ready'
+where s.kind = 'pack_started' order by s.order_id desc;
+```
+
+Retries and per-task durations are in the Workflows dashboard (each `render_poster` run is listed under its `generate_pack` parent). On a Hobby workspace Render starts at most 16 CPU of new compute per minute, so a 2-language order (18 posters on `flex`, up to 1 CPU each) may queue a few runs.
+
+## Showing QA in the demo
+
+Checked locally (English, all 3 designs x 3 sizes). The web form allows up to 50 characters of shop name and 120 of offer:
+
+- **Retry with the simple layout:** shop `Shree Ganesh Mahalaxmi Sweets and Namkeen Bhandar`, offer `Flat 25% off on all dry fruit gift boxes, kaju katli, soan papdi and every sweet box above Rs 999 till Bhai Dooj!!`. 7 posters pass first time; the rangoli and lantern square posters do not fit, are redrawn with the simple layout and pass, with the note `first layout failed (text did not fit at minimum size); used simple layout`.
+- **Hard failure:** a shop name that is one long word, e.g. `Supercalifragilisticexpialidociousmegasweetsshop`. Words are never broken, so the name runs past the edge and every poster is marked `failed` (`text did not fit at minimum size; shop outside safe margin`), even after the retry.
+
+Both show in `/admin/orders/{id}` with their notes; the download page marks failed posters "check before posting".
+
 ## Running locally
 
 ```

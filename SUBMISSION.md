@@ -39,7 +39,8 @@ Add to this list whenever we find something. Current list:
 - On the free plan, packs render inside the web service on a small CPU share: the first live smoke-test order (2 languages, 18 posters plus messages) took 139 s from order to all previews, against 6 s on a laptop. A shop owner watching a live demo waits over two minutes.
 - Phone-width layout was checked in headless Chromium with mobile emulation at 360 and 390 px (no horizontal scroll on any page, tap targets enlarged to about 44 px), not on a real phone. Admin tables scroll sideways on a phone. The download page for a 3-design, 2-language bundle is long (18 poster rows).
 - Tailwind, htmx and fonts load from public CDNs, so a page loaded on a weak connection can show unstyled for a moment.
-- Render Workflows Python services run on Render's native Python runtime, not our Dockerfile, so `libfribidi0` (needed for correct Hindi/Marathi shaping) may be missing there. This has to be checked on the first Workflows run before we claim it works.
+- Render Workflows can build from our Dockerfile (Language "Docker"), which installs `libfribidi0` for Hindi/Marathi shaping. But Docker-based workflows can only be created in the Dashboard (not from a Blueprint, the CLI or the API), and they cannot run locally with the Render CLI's task server. So the Workflow setup is a manual step, and the Workflows path has only been tested on Render itself. Hindi shaping must still be checked by eye on the first Workflows run.
+- Words are never broken across lines. A shop name or offer with one very long word (for example a 48-letter name with no spaces) runs past the poster edge; QA marks every poster `failed` even after the simple-layout retry, and the shop has to shorten the name.
 - [TODO: add anything found during the build]
 
 ## How we used Render Workflows
