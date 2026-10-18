@@ -12,7 +12,7 @@ For each chosen language: 3 designs (diya, rangoli, lantern) x 3 sizes (status 1
 
 ## How we use Render Workflows
 
-`pipeline/workflow.py` is a Render Workflows service (start command `python -m pipeline.workflow`, Docker runtime, same image as the web app). The web app calls `trigger_pack(order_id)` (`pipeline/api.py`), which starts the `generate_pack` task through the Render Python SDK (`Render().workflows.start_task("<slug>/generate_pack", [order_id])`).
+`pipeline/workflow.py` is a Render Workflows service (start command `python -m pipeline.workflow`). In the Dashboard it can use the Docker runtime (same image as the web app); Render's API only offers native runtimes for Workflow services, so for a Python-runtime service the build command is `pip install -r requirements.txt && python -m pipeline.vendor_fribidi` and the start command is prefixed with `LD_LIBRARY_PATH=/opt/render/project/src/.vendor/lib`. `vendor_fribidi.py` downloads Debian's `libfribidi0` package, checks its SHA-256 against Debian's index and unpacks the library (checked in a bare `python:3.12-slim` container: RAQM becomes available and every Hindi/Marathi sample passes QA with correct conjuncts). `render_poster` refuses Hindi/Marathi if RAQM is still missing, so a bad instance fails loudly. The web app calls `trigger_pack(order_id)` (`pipeline/api.py`), which starts the `generate_pack` task through the Render Python SDK (`Render().workflows.start_task("<slug>/generate_pack", [order_id])`).
 
 ```
 generate_pack(order_id)                        parent task, timeout 15 min, 1 retry
@@ -27,6 +27,7 @@ generate_pack(order_id)                        parent task, timeout 15 min, 1 re
 - **Retries and timeouts per task:** default 2 retries with exponential backoff (2 s, x2), `render_poster` 180 s, `write_copy` 120 s, `bundle_pack` 60 s.
 - **Idempotency:** Workflows is in beta (no checkpointing), so every task checks the database first and writes with `on conflict do nothing` on the unique key (order, kind, language, size, template). Retrying a task, or re-running the whole workflow for an order, never duplicates items. `write_copy` stores the headline so a re-run reuses the same copy rather than calling the LLM again.
 - **Quality gate inside each render task** (`qa.py`): text inside a safe margin, no overlapping lines, WCAG contrast (4.5:1, or 3:1 for large text), the phone number and full offer text present on the poster, and every character covered by the font (no missing-glyph boxes). Failures are recorded in `pack_items.qa_status`/`qa_notes` and shown in the admin order view.
+- **Status (Oct 18):** not yet run on Render. Creating the Workflow service through Render's API returned `HTTP 402: Payment information is required`: Workflows bill per task-run on the `flex` plan and the workspace has no card yet. Until a card or credits are added, every live pack renders through the fallback below.
 - **Fallback:** if `RENDER_API_KEY`/`WORKFLOW_SLUG` are not set, or the workflow cannot be started, `trigger_pack` runs the same steps in a thread pool inside the web service and records `runner: local` on the `pack_started` event, so we can always tell which path produced a pack.
 
 ## Running locally

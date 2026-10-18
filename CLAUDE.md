@@ -14,7 +14,7 @@ Read this file first in every session. Then read `ROADMAP.md` and your own brief
 
 **Not done or not verified yet** (the critical path to 6:30 PM; owners in the briefs):
 1. **Deployed (Oct 18, 10:40 AM):** https://locallift-web-jp8m.onrender.com, web service `locallift-web` + Postgres `locallift-db` (both **free** plan, Singapore, Om's Render workspace, created via the API from the public repo URL, so pushes to `main` do **not** auto-deploy: press Manual Deploy in the dashboard, or connect the repo through the Render GitHub app). `tests/smoke.py` passes against it (pack in 139 s on the free CPU). Still open: add a card or claim credits and switch the web service to `starter`; create the Workflow service (Dashboard only, needs Ayush + Om) and set `RENDER_API_KEY` / `WORKFLOW_SLUG` on the web service. Admin password: ask Om (not in the repo).
-2. Render Workflows has never run on Render. Until it has, the submission must not claim it; the app falls back to rendering inside the web service.
+2. Render Workflows has never run on Render. Oct 18: creating the Workflow service via the API returned `HTTP 402: Payment information is required` (needs a card or credits on Om's workspace). Build/run commands for the Python runtime, including the `vendor_fribidi` step, are in `pipeline/README.md`. Until it has, the submission must not claim it; the app falls back to rendering inside the web service.
 3. The UPI deep link and QR are untested on a real phone.
 4. Phone width checked in headless Chromium (360/390 px, mobile emulation) and fixed; not yet on a real phone.
 5. Hindi and Marathi copy has had no native-speaker review.
