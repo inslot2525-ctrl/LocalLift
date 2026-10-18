@@ -40,7 +40,7 @@ Add to this list whenever we find something. Current list:
 - Phone-width layout was checked in headless Chromium with mobile emulation at 360 and 390 px (no horizontal scroll on any page, tap targets enlarged to about 44 px), not on a real phone. Admin tables scroll sideways on a phone. The download page for a 3-design, 2-language bundle is long (18 poster rows).
 - Tailwind, htmx and fonts load from public CDNs, so a page loaded on a weak connection can show unstyled for a moment.
 - Render Workflow services created through the API only offer native runtimes, not our Dockerfile, so `libfribidi0` (needed for correct Hindi/Marathi shaping) is missing there. A build step (`pipeline/vendor_fribidi.py`) downloads and hash-checks Debian's package; this works in a bare Python container but has not yet run on Render.
-- Render Workflows has not run on Render yet: creating the Workflow service returned `HTTP 402: Payment information is required` (Workflows bill per task-run and our workspace has no card). Until it does, every live pack renders inside the web service on the free CPU (see the 139 s figure above).
+- Render Workflows has not run on Render yet: creating the Workflow service returned `HTTP 402: Payment information is required` (Workflows bill per task-run and our workspace has no card). Claiming Render's $50 hackathon credits did not remove this: the Dashboard still asks to add a card before it creates a Workflow service. Until it does, every live pack renders inside the web service on the free CPU (see the 139 s figure above).
 - [TODO: add anything found during the build]
 
 ## How we used Render Workflows
