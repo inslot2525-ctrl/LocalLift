@@ -13,6 +13,7 @@ log = logging.getLogger(__name__)
 
 LIBRARY_DIR = Path(__file__).with_name("copy_library")
 LANG_NAMES = {"en": "English", "hi": "Hindi", "mr": "Marathi"}
+THEMES = {"diwali": "Diwali", "offer": "special"}
 DEVANAGARI = re.compile(r"[ऀ-ॿ]")
 
 
@@ -59,10 +60,10 @@ def _llm_copy(order: dict, languages: list[str]) -> dict:
     client = anthropic.Anthropic(api_key=os.environ["LLM_API_KEY"], timeout=40, max_retries=1)
     langs = ", ".join(f"{code} ({LANG_NAMES[code]})" for code in languages)
     prompt = (
-        "You write short festive marketing copy for a small Indian shop's Diwali offer.\n"
+        f"You write short marketing copy for a small Indian shop's {THEMES.get(order['festival'], 'special')} offer.\n"
         f"Shop: {order['shop_name']}\nOffer: {order['offer_text']}\nPhone: {order['phone']}\n\n"
         f"For each language in [{langs}], write natural, warm, everyday copy (not formal or literary) with:\n"
-        "- headline: a Diwali greeting of at most 30 characters for a poster\n"
+        "- headline: a short poster headline of at most 30 characters that fits the occasion\n"
         "- whatsapp: exactly 3 different broadcast messages (under 350 characters each) that state the offer "
         "and the phone number; one or two emoji is fine\n"
         "- review: one polite message asking a customer to leave a Google review\n"

@@ -1,0 +1,33 @@
+{
+  "_note": "Human-written fallback copy for a general (non-festival) offer. Placeholders: {shop}, {offer}, {phone}. Hindi and Marathi need native-speaker review.",
+  "en": {
+    "headline": "Special Offer!",
+    "cta": "Call / WhatsApp",
+    "whatsapp": [
+      "Special offer at {shop}! ✨\n\n{offer}\n\nVisit us or call/WhatsApp {phone} to order.",
+      "Good news from {shop} 🎉\nFor a limited time: {offer}\n\nCall {phone} to know more.",
+      "Last few days of our offer! ⏳\n{offer} at {shop}.\n\nDon't miss it. Call/WhatsApp {phone}."
+    ],
+    "review": "Thank you for shopping at {shop}! 🙏 If you liked our service, please leave us a short Google review. It helps a small shop like ours a lot. For any help, call {phone}."
+  },
+  "hi": {
+    "headline": "खास ऑफर!",
+    "cta": "कॉल / व्हाट्सऐप करें",
+    "whatsapp": [
+      "{shop} में खास ऑफर! ✨\n\n{offer}\n\nऑर्डर के लिए आइए या कॉल/व्हाट्सऐप करें: {phone}",
+      "{shop} की ओर से खुशखबरी 🎉\nसीमित समय के लिए: {offer}\n\nज़्यादा जानकारी के लिए कॉल करें: {phone}",
+      "ऑफर के आखिरी कुछ दिन! ⏳\n{shop} में {offer}\n\nमौका न चूकें। कॉल/व्हाट्सऐप: {phone}"
+    ],
+    "review": "{shop} से खरीदारी करने के लिए धन्यवाद! 🙏 अगर आपको हमारी सेवा अच्छी लगी, तो कृपया Google पर एक छोटा सा रिव्यू दें। इससे हमारी छोटी दुकान को बहुत मदद मिलती है। किसी भी मदद के लिए कॉल करें: {phone}"
+  },
+  "mr": {
+    "headline": "खास ऑफर!",
+    "cta": "कॉल / व्हॉट्सॲप करा",
+    "whatsapp": [
+      "{shop} मध्ये खास ऑफर! ✨\n\n{offer}\n\nऑर्डरसाठी या किंवा कॉल/व्हॉट्सॲप करा: {phone}",
+      "{shop} कडून आनंदाची बातमी 🎉\nमर्यादित कालावधीसाठी: {offer}\n\nअधिक माहितीसाठी कॉल करा: {phone}",
+      "ऑफरचे शेवटचे काही दिवस! ⏳\n{shop} मध्ये {offer}\n\nसंधी चुकवू नका. कॉल/व्हॉट्सॲप: {phone}"
+    ],
+    "review": "{shop} मधून खरेदी केल्याबद्दल धन्यवाद! 🙏 आमची सेवा आवडली असल्यास कृपया Google वर एक छोटा रिव्ह्यू द्या. आमच्यासारख्या छोट्या दुकानाला त्याची खूप मदत होते. कोणत्याही मदतीसाठी कॉल करा: {phone}"
+  }
+}

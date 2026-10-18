@@ -4,7 +4,7 @@ Only real figures. The demo video link is the one item still missing.
 
 ## Project description
 
-**What it is:** LocalLift gives small local shops done-for-you marketing packs (offer posters, WhatsApp messages and a review request) in their own language, delivered in minutes. Version 1 covers festive offer packs for Diwali.
+**What it is:** LocalLift gives small local shops done-for-you marketing packs (offer posters, WhatsApp messages and a review request) in their own language, delivered in minutes. Shops pick the occasion: a general "Special offer" pack (the default) or a Diwali pack. More festivals can be added as copy files.
 
 **Who it is for:** small shop owners (sweet shops, garment and gift stores, general stores) who run festive offers without a designer, and college students who earn a commission as LocalLift reps.
 
@@ -20,6 +20,7 @@ Only real figures. The demo video link is the one item still missing.
 Add to this list whenever we find something. Current list:
 
 - Templates are generic; design quality is below a custom designer.
+- Only two occasions exist so far (general offer and Diwali). The "Classic" design keeps its lamp artwork for both.
 - Hindi and Marathi copy needs native-speaker review; machine copy can sound unnatural.
 - Payment confirmation is manual (customer enters a reference; an admin approves). Not suitable at scale.
 - Files are stored in the database; this does not scale.

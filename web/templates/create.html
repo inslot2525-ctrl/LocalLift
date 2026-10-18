@@ -35,7 +35,13 @@
         <label class="flex items-center gap-2 bg-paper/60 border border-line rounded-full px-4 min-h-[48px] cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brand-soft has-[:checked]:font-semibold"><input type="checkbox" name="languages" value="{{ code }}" {% if code in (form.languages or ['en', 'hi']) %}checked{% endif %}> {{ name }}</label>
         {% endfor %}
       </div></div>
-    <input type="hidden" name="festival" value="diwali">
+    <div><span class="font-semibold">Occasion</span>
+      <div class="mt-2 flex flex-wrap gap-2">
+        {% for code, name in FESTIVALS.items() %}
+        <label class="flex items-center gap-2 bg-paper/60 border border-line rounded-full px-4 min-h-[48px] cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brand-soft has-[:checked]:font-semibold"><input type="radio" name="festival" value="{{ code }}" {% if code == (form.festival or 'offer') %}checked{% endif %}> {{ name }}</label>
+        {% endfor %}
+      </div>
+      <span class="block mt-1 text-sm text-muted">Sets the poster headline and messages: "Special Offer!" or "Happy Diwali!".</span></div>
   </fieldset>
 
   <fieldset class="space-y-3 border-t border-line pt-7">

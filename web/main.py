@@ -30,7 +30,7 @@ logging.basicConfig(level=logging.INFO)
 log = logging.getLogger("web")
 
 LANGUAGES = {"en": "English", "hi": "हिन्दी (Hindi)", "mr": "मराठी (Marathi)"}
-FESTIVALS = {"diwali": "Diwali"}
+FESTIVALS = {"offer": "Any offer (no festival)", "diwali": "Diwali"}
 PLANS = {
     "starter": {"name": "Starter pack", "price": int(os.getenv("PRICE_STARTER", "199")), "templates": ["diya"],
                 "desc": "1 design in 3 sizes (status, square, A4 print), every language you chose, 3 WhatsApp messages and a review request"},
@@ -48,7 +48,7 @@ SAMPLE = {"shop_name": "Sharma Sweets (sample)", "phone": "98765 43210", "langua
           "offer_text": "20% off on all sweet boxes above Rs 500"}
 
 templates = Jinja2Templates(directory=Path(__file__).with_name("templates"))
-templates.env.globals.update(LANGUAGES=LANGUAGES, PLANS=PLANS, SIZE_LABELS=SIZE_LABELS, DESIGN_LABELS=DESIGN_LABELS)
+templates.env.globals.update(FESTIVALS=FESTIVALS, LANGUAGES=LANGUAGES, PLANS=PLANS, SIZE_LABELS=SIZE_LABELS, DESIGN_LABELS=DESIGN_LABELS)
 security = HTTPBasic()
 _recent_orders: dict[str, deque] = defaultdict(deque)
 
@@ -127,7 +127,7 @@ SHOWCASE_OFFERS = {"en": "20% off on all sweet boxes above Rs 500",
 
 @lru_cache(maxsize=32)
 def _showcase(template: str, lang: str, size: str) -> bytes:
-    order = {"shop_name": "Sharma Sweets", "phone": "98765 43210", "festival": "diwali",
+    order = {"shop_name": "Sharma Sweets", "phone": "98765 43210", "festival": "offer",
              "offer_text": SHOWCASE_OFFERS[lang]}
     c = fallback_copy(order, lang)
     png = render_item({**order, "headline": c["headline"], "cta": c["cta"], "language": lang,
@@ -157,7 +157,7 @@ def healthz():
 @app.get("/", response_class=HTMLResponse)
 def landing(request: Request):
     log_event("visit", meta={"path": "/"})
-    sample = fallback_copy({"shop_name": "Sharma Sweets", "phone": "98765 43210", "festival": "diwali",
+    sample = fallback_copy({"shop_name": "Sharma Sweets", "phone": "98765 43210", "festival": "offer",
                             "offer_text": SHOWCASE_OFFERS["en"]}, "en")
     return render(request, "landing.html", sample_message=sample["whatsapp"][0])
 
@@ -179,10 +179,10 @@ def create_form(request: Request, rep: str = ""):
 async def create_submit(
     request: Request,
     shop_name: str = Form(""), phone: str = Form(""), offer_text: str = Form(""),
-    languages: list[str] = Form([]), festival: str = Form("diwali"), plan: str = Form("starter"),
+    languages: list[str] = Form([]), festival: str = Form("offer"), plan: str = Form("starter"),
     rep_code: str = Form(""), logo: UploadFile | None = File(None),
 ):
-    form = {"shop_name": shop_name, "phone": phone, "offer_text": offer_text, "languages": languages, "plan": plan}
+    form = {"shop_name": shop_name, "phone": phone, "offer_text": offer_text, "languages": languages, "plan": plan, "festival": festival}
     shop_name, offer_text = shop_name.strip(), re.sub(r"[ \t]+", " ", offer_text.strip())
     phone = re.sub(r"[^\d+ ]", "", phone).strip()
     errors = []
@@ -240,7 +240,7 @@ def sample():
         view_token = row["view_token"]
     else:
         order_id, view_token = create_order(SAMPLE["shop_name"], SAMPLE["phone"], SAMPLE["offer_text"],
-                                            SAMPLE["languages"], "diwali", "festive_bundle", None, None, None, True)
+                                            SAMPLE["languages"], "offer", "festive_bundle", None, None, None, True)
         trigger_pack(order_id)
     log_event("sample_view")
     return RedirectResponse(f"/o/{view_token}", status_code=303)
