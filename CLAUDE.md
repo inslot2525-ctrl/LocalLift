@@ -13,10 +13,10 @@ Read this file first in every session. Then read `ROADMAP.md` and your own brief
 - `pipeline/README.md` has the rendering findings and the Workflows write-up for the submission. `README.md` has the deploy steps.
 
 **Not done or not verified yet** (the critical path to 6:30 PM; owners in the briefs):
-1. Nothing is deployed. Render account, credits, Blueprint and Workflow service: **Om** (deploy) with **Ayush** (Workflow service).
+1. **Deployed (Oct 18, 10:40 AM):** https://locallift-web-jp8m.onrender.com, web service `locallift-web` + Postgres `locallift-db` (both **free** plan, Singapore, Om's Render workspace, created via the API, auto-deploys from `main`). `tests/smoke.py` passes against it (pack in 139 s on the free CPU). Still open: add a card or claim credits and switch the web service to `starter`; create the Workflow service (Dashboard only, needs Ayush + Om) and set `RENDER_API_KEY` / `WORKFLOW_SLUG` on the web service. Admin password: ask Om (not in the repo).
 2. Render Workflows has never run on Render. Until it has, the submission must not claim it; the app falls back to rendering inside the web service.
 3. The UPI deep link and QR are untested on a real phone.
-4. The pages have not been checked at phone width in a real browser.
+4. Phone width checked in headless Chromium (360/390 px, mobile emulation) and fixed; not yet on a real phone.
 5. Hindi and Marathi copy has had no native-speaker review.
 6. Schema additions below need Ayush and Om to agree (Aditya is away, so two of three is the quorum for now).
 7. No real shops, no traction yet. Distribution work moved to Ayush and Om (`BRIEF_OPS.md`).

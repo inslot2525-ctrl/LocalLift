@@ -23,7 +23,7 @@
   {% endfor %}
 </div>
 {% set tall = posters | selectattr('size', 'equalto', 'status') | list %}
-{% if tall %}<details class="mt-3"><summary class="cursor-pointer text-sm font-semibold text-rose-900">Show WhatsApp status versions</summary>
+{% if tall %}<details class="mt-3"><summary class="cursor-pointer text-sm font-semibold text-rose-900 py-3">Show WhatsApp status versions</summary>
 <div class="grid grid-cols-3 gap-2 mt-2">{% for p in tall %}<img src="/o/{{ order.view_token }}/img/{{ p.id }}" loading="lazy" alt="status {{ p.template_id }} {{ p.language }}" class="w-full rounded">{% endfor %}</div></details>{% endif %}
 {% endif %}
 {% set wa = messages | selectattr('template_id', 'equalto', 'wa1') | list %}

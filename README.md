@@ -4,7 +4,7 @@ Done-for-you festive marketing packs (offer posters, WhatsApp messages, review r
 
 Built for RevHack 2026. Team docs: `CLAUDE.md`, `ROADMAP.md`, `BRIEF_*.md`, `SUBMISSION.md`.
 
-- Live URL: [TODO]
+- Live URL: https://locallift-web-jp8m.onrender.com (demo pack without payment: `/sample`)
 - How packs are made and how we use Render Workflows: [`pipeline/README.md`](pipeline/README.md)
 
 ## Pages

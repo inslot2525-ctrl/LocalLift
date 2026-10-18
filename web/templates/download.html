@@ -8,7 +8,7 @@
   {% for p in posters %}
   <li class="flex justify-between items-center p-3 text-sm">
     <span>{{ p.template_id|capitalize }} · {{ LANGUAGES[p.language] }} · {{ SIZE_LABELS[p.size] }}{% if p.qa_status == 'failed' %} <span class="text-amber-700">(check before posting)</span>{% endif %}</span>
-    <a class="text-rose-800 font-semibold underline ml-2" href="/d/{{ token }}/file/{{ p.id }}">Download</a></li>
+    <a class="text-rose-800 font-semibold underline ml-2 px-3 py-3 -my-1" href="/d/{{ token }}/file/{{ p.id }}">Download</a></li>
   {% endfor %}
 </ul>
 <h2 class="font-semibold text-lg mt-6">Messages</h2>
@@ -17,8 +17,8 @@
   <div class="text-xs text-stone-500">{{ LANGUAGES[m.language] }} · {{ 'Review request' if m.template_id == 'review' else 'WhatsApp broadcast ' ~ m.template_id[-1] }}</div>
   <div class="mt-1 whitespace-pre-line text-sm">{{ m.body }}</div>
   <div class="mt-2 flex gap-2">
-    <button type="button" class="text-sm border rounded-lg px-3 py-1" onclick="navigator.clipboard.writeText(this.parentElement.previousElementSibling.innerText);this.innerText='Copied'">Copy</button>
-    <a class="text-sm bg-green-600 text-white rounded-lg px-3 py-1" href="https://wa.me/?text={{ m.body|urlencode }}" target="_blank" rel="noopener">Send on WhatsApp</a>
+    <button type="button" class="text-sm border rounded-lg px-4 py-2.5 min-h-[44px]" onclick="navigator.clipboard.writeText(this.parentElement.previousElementSibling.innerText);this.innerText='Copied'">Copy</button>
+    <a class="text-sm bg-green-600 text-white rounded-lg px-4 py-2.5 min-h-[44px] inline-flex items-center" href="https://wa.me/?text={{ m.body|urlencode }}" target="_blank" rel="noopener">Send on WhatsApp</a>
   </div>
 </div>
 {% endfor %}
