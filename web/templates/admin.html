@@ -11,7 +11,7 @@
   <td class="p-2"><a class="underline" href="/admin/orders/{{ o.id }}">{{ o.id }}</a>{% if o.is_sample %} <span class="text-sky-700">sample</span>{% endif %}</td>
   <td class="min-w-[170px]">{{ o.shop_name }}<br><span class="text-xs text-muted">{{ o.phone }} · {{ o.languages|join(',') }} · {{ o.created_at.strftime('%d %b %H:%M') }}</span></td>
   <td>{{ o.status }}</td><td>{{ o.plan }}</td><td>{{ o.amount_inr }}</td><td class="font-mono text-xs">{{ o.payment_ref or '' }}</td>
-  <td>{{ o.rep_code or '' }}</td><td>{{ o.items }}{% if o.failed %} <span class="text-red-700">({{ o.failed }} QA failed)</span>{% endif %}</td>
+  <td>{{ o.rep_code or '' }}</td><td>{{ o['items'] }}{% if o.failed %} <span class="text-red-700">({{ o.failed }} QA failed)</span>{% endif %}</td>
   <td class="whitespace-nowrap">{% if o.status == 'awaiting_confirmation' %}
     <form method="post" action="/admin/orders/{{ o.id }}/approve" class="inline"><button class="bg-green-700 text-white px-3 min-h-[44px] rounded-md">Approve</button></form>
     <form method="post" action="/admin/orders/{{ o.id }}/reject" class="inline"><button class="bg-red-700 text-white px-3 min-h-[44px] rounded-md">Reject</button></form>{% endif %}</td>
