@@ -8,9 +8,13 @@ Every task is idempotent (see pack.py), so Render's retries and manual re-runs n
 """
 import asyncio
 
+from PIL import features
 from render import Retry, TaskContext, Workflows
 
 from . import pack
+
+# Without RAQM (libfribidi), Hindi/Marathi conjuncts break silently, so refuse instead of shipping bad posters.
+RAQM = features.check("raqm")
 
 app = Workflows(
     default_retry=Retry(max_retries=2, wait_duration_ms=2000, backoff_scaling=2),
@@ -26,6 +30,8 @@ def write_copy(ctx: TaskContext, order_id: int) -> dict:
 @app.task(timeout_seconds=180)
 def render_poster(ctx: TaskContext, order_id: int, language: str, size: str, template_id: str,
                   headline: str, cta: str) -> dict:
+    if language != "en" and not RAQM:
+        raise RuntimeError("RAQM/libfribidi missing on this instance; see pipeline/vendor_fribidi.py")
     return pack.render_one(order_id, language, size, template_id, headline, cta)
 
 
@@ -51,4 +57,5 @@ async def generate_pack(ctx: TaskContext, order_id: int) -> dict:
 
 
 if __name__ == "__main__":
+    print("pillow raqm:", RAQM, "fribidi:", features.version("fribidi"), flush=True)
     app.start()
