@@ -1,10 +1,10 @@
 {% extends "base.html" %}
-{% block title %}Make your Diwali pack · LocalLift{% endblock %}
+{% block title %}Make your offer pack · LocalLift{% endblock %}
 {% block main_class %}max-w-5xl{% endblock %}
 {% block content %}
 <div class="max-w-2xl">
   <p class="text-sm font-bold text-marigold-dark">FREE PREVIEW · ABOUT 60 SECONDS</p>
-  <h1 class="mt-1 text-[2rem] font-bold leading-tight">Make your Diwali pack</h1>
+  <h1 class="mt-1 text-[2rem] font-bold leading-tight">Make your offer pack</h1>
   <p class="text-muted mt-1">Fill this in once. You see every design before you pay anything.</p>
 </div>
 
@@ -26,7 +26,7 @@
 
   <fieldset class="space-y-5 border-t border-line pt-7">
     <legend class="flex items-center gap-3 text-lg font-bold font-serif"><span class="w-8 h-8 rounded-full bg-brand text-white text-base flex items-center justify-center font-sans">2</span>Your offer</legend>
-    <label class="block"><span class="font-semibold">Your Diwali offer</span>
+    <label class="block"><span class="font-semibold">Your offer</span>
       <textarea name="offer_text" required maxlength="120" rows="2" placeholder="20% off on all sweet boxes above Rs 500" class="mt-1 w-full rounded-md border border-line bg-paper/60 px-3 py-3 text-lg placeholder:text-stone-400 focus:border-brand focus:bg-white">{{ form.offer_text or '' }}</textarea>
       <span class="block mt-1 text-sm text-muted">Write it in the language you want on the poster. Up to 120 characters.</span></label>
     <div><span class="font-semibold">Languages</span>
@@ -57,7 +57,7 @@
 </form>
 
 <aside class="hidden md:block sticky top-6 space-y-4">
-  <div class="festive rounded-xl p-5 text-[#fbeee0]">
+  <div class="panel rounded-xl p-5 text-[#fbeee0]">
     <img src="/showcase/diya/hi/status.jpg" alt="Sample poster" class="poster w-40 mx-auto">
     <p class="mt-4 text-center text-sm text-[#e8cdb3]">A sample of what you will get</p>
   </div>

@@ -16,12 +16,12 @@
 {% set squares = posters | selectattr('size', 'equalto', 'square') | list %}
 {% if squares %}
 <h2 class="text-xl font-bold">Poster previews</h2>
-<p class="text-[15px] text-muted mt-1">Each design also comes as a WhatsApp status (tall) and an A4 print file. The starter pack includes the Diya design; the festive bundle includes all three.</p>
+<p class="text-[15px] text-muted mt-1">Each design also comes as a WhatsApp status (tall) and an A4 print file. The starter pack includes the {{ DESIGN_LABELS.diya }} design; the complete bundle includes all three.</p>
 <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-3">
   {% for p in squares %}
   <figure class="bg-card border border-line rounded-md overflow-hidden">
     <img src="/o/{{ order.view_token }}/img/{{ p.id }}" loading="lazy" alt="{{ p.template_id }} design, {{ p.language }}" class="w-full block aspect-square object-cover bg-line">
-    <figcaption class="text-sm px-2 py-1.5 flex flex-wrap items-center gap-x-1.5"><span class="font-semibold">{{ p.template_id|capitalize }}</span><span class="text-muted">· {{ LANGUAGES[p.language] }}</span>{% if p.template_id != 'diya' %}<span class="text-xs font-semibold text-marigold-dark bg-marigold-soft px-1.5 rounded-sm">bundle</span>{% endif %}</figcaption>
+    <figcaption class="text-sm px-2 py-1.5 flex flex-wrap items-center gap-x-1.5"><span class="font-semibold">{{ DESIGN_LABELS[p.template_id] }}</span><span class="text-muted">· {{ LANGUAGES[p.language] }}</span>{% if p.template_id != 'diya' %}<span class="text-xs font-semibold text-marigold-dark bg-marigold-soft px-1.5 rounded-sm">bundle</span>{% endif %}</figcaption>
   </figure>
   {% endfor %}
 </div>

@@ -34,10 +34,12 @@ FESTIVALS = {"diwali": "Diwali"}
 PLANS = {
     "starter": {"name": "Starter pack", "price": int(os.getenv("PRICE_STARTER", "199")), "templates": ["diya"],
                 "desc": "1 design in 3 sizes (status, square, A4 print), every language you chose, 3 WhatsApp messages and a review request"},
-    "festive_bundle": {"name": "Festive bundle", "price": int(os.getenv("PRICE_BUNDLE", "499")),
+    "festive_bundle": {"name": "Complete bundle", "price": int(os.getenv("PRICE_BUNDLE", "499")),
                        "templates": ["diya", "rangoli", "lantern"],
-                       "desc": "All 3 designs in 3 sizes, every language you chose, all messages. Covers Dhanteras to Bhai Dooj"},
+                       "desc": "All 3 designs in 3 sizes, every language you chose, all messages"},
 }
+# Display names for the poster designs; the ids stay as stored in pack_items.template_id.
+DESIGN_LABELS = {"diya": "Classic", "rangoli": "Bright", "lantern": "Night"}
 SIZE_LABELS = {"status": "WhatsApp status (1080x1920)", "square": "Square post (1080x1080)", "a4": "A4 print (2480x3508)"}
 LOGO_TYPES = {"image/png", "image/jpeg", "image/webp"}
 MAX_LOGO = 2 * 1024 * 1024
@@ -46,7 +48,7 @@ SAMPLE = {"shop_name": "Sharma Sweets (sample)", "phone": "98765 43210", "langua
           "offer_text": "20% off on all sweet boxes above Rs 500"}
 
 templates = Jinja2Templates(directory=Path(__file__).with_name("templates"))
-templates.env.globals.update(LANGUAGES=LANGUAGES, PLANS=PLANS, SIZE_LABELS=SIZE_LABELS)
+templates.env.globals.update(LANGUAGES=LANGUAGES, PLANS=PLANS, SIZE_LABELS=SIZE_LABELS, DESIGN_LABELS=DESIGN_LABELS)
 security = HTTPBasic()
 _recent_orders: dict[str, deque] = defaultdict(deque)
 

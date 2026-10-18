@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% block main_class %}max-w-5xl{% endblock %}
 {% block hero %}
-<section class="festive text-[#fbeee0] overflow-hidden">
+<section class="panel text-[#fbeee0] overflow-hidden">
   <div class="max-w-5xl mx-auto px-4 pt-10 pb-12 sm:py-14 grid md:grid-cols-[1.1fr_1fr] gap-10 items-center">
     <div>
-      <p class="inline-flex items-center gap-2 text-sm font-semibold text-marigold-light bg-white/5 border border-white/10 rounded-full px-3 py-1">For local shops · Diwali 2026</p>
-      <h1 class="mt-4 text-[2.1rem] sm:text-[2.9rem] font-bold leading-[1.1] text-white">Diwali posters and WhatsApp messages for your shop, in your language</h1>
+      <p class="inline-flex items-center gap-2 text-sm font-semibold text-marigold-light bg-white/5 border border-white/10 rounded-full px-3 py-1">For local shops and small businesses</p>
+      <h1 class="mt-4 text-[2.1rem] sm:text-[2.9rem] font-bold leading-[1.1] text-white">Offer posters and WhatsApp messages for your shop, in your language</h1>
       <p class="mt-4 text-lg text-[#f0dcc6] max-w-xl">Type your offer once. Get posters for WhatsApp status, Instagram and print, plus ready-to-send messages, in English, हिन्दी and मराठी.</p>
       <div class="mt-7 flex flex-col sm:flex-row sm:items-center gap-3">
         <a href="/create" class="bg-marigold hover:bg-marigold-light text-brand-deep font-bold px-6 rounded-md text-lg inline-flex items-center justify-center min-h-[54px] shadow-card">Start my pack, free preview</a>
@@ -14,10 +14,10 @@
       <p class="mt-4 text-[15px] text-[#e8cdb3]">From ₹{{ PLANS.starter.price }}. You see a watermarked preview first and pay only if you want the files.</p>
     </div>
     <div class="relative h-[340px] sm:h-[420px] max-w-[420px] w-full mx-auto" aria-label="Sample posters">
-      <img src="/showcase/rangoli/mr/status.jpg" alt="Sample Marathi poster, rangoli design" class="poster absolute left-0 top-8 w-[38%] -rotate-[8deg]">
-      <img src="/showcase/lantern/en/status.jpg" alt="Sample English poster, lantern design" class="poster absolute right-0 top-8 w-[38%] rotate-[8deg]">
-      <img src="/showcase/diya/hi/status.jpg" alt="Sample Hindi poster, diya design" class="poster absolute left-1/2 -translate-x-1/2 top-0 w-[44%] z-10">
-      <p class="absolute bottom-0 inset-x-0 text-center text-xs text-[#e8cdb3]">Sample posters for a made-up shop, made by LocalLift.</p>
+      <img src="/showcase/rangoli/mr/status.jpg" alt="Sample Marathi poster" class="poster absolute left-0 top-8 w-[38%] -rotate-[8deg]">
+      <img src="/showcase/lantern/en/status.jpg" alt="Sample English poster" class="poster absolute right-0 top-8 w-[38%] rotate-[8deg]">
+      <img src="/showcase/diya/hi/status.jpg" alt="Sample Hindi poster" class="poster absolute left-1/2 -translate-x-1/2 top-0 w-[44%] z-10">
+      <p class="absolute bottom-0 inset-x-0 text-center text-xs text-[#e8cdb3]">Sample Diwali pack for a made-up shop, made by LocalLift.</p>
     </div>
   </div>
 </section>
@@ -49,10 +49,10 @@
 <section class="py-10">
   <div class="text-center max-w-2xl mx-auto">
     <h2 class="text-[1.8rem] font-bold">Three designs, three sizes, your languages</h2>
-    <p class="mt-2 text-muted">Every poster carries your shop name, offer and phone number, and your logo if you add one. Each design comes as a WhatsApp status, a square post and an A4 print file. Shown here for a sample shop.</p>
+    <p class="mt-2 text-muted">Every poster carries your shop name, offer and phone number, and your logo if you add one. Each design comes as a WhatsApp status, a square post and an A4 print file. Shown here for a sample shop's Diwali offer.</p>
   </div>
   <div class="mt-7 grid grid-cols-3 gap-3 sm:gap-5">
-    {% for t, lang, label in [('diya', 'hi', 'Diya · हिन्दी'), ('rangoli', 'en', 'Rangoli · English'), ('lantern', 'mr', 'Lantern · मराठी')] %}
+    {% for t, lang, label in [('diya', 'hi', DESIGN_LABELS.diya ~ ' · हिन्दी'), ('rangoli', 'en', DESIGN_LABELS.rangoli ~ ' · English'), ('lantern', 'mr', DESIGN_LABELS.lantern ~ ' · मराठी')] %}
     <figure class="bg-card rounded-xl border border-line shadow-card p-1.5 sm:p-2">
       <img src="/showcase/{{ t }}/{{ lang }}/square.jpg" alt="Sample {{ label }} poster" loading="lazy" class="w-full aspect-square rounded-lg bg-line">
       <figcaption class="text-center text-xs sm:text-sm font-semibold py-1.5">{{ label }}</figcaption>
@@ -99,9 +99,9 @@
   </div>
 </section>
 
-<section class="festive rounded-2xl text-center text-white px-6 py-10 mt-4">
-  <h2 class="text-[1.7rem] font-bold">Dhanteras is on 6 November</h2>
-  <p class="mt-2 text-[#f0dcc6]">Get your offer in front of customers before the festival rush.</p>
+<section class="panel rounded-2xl text-center text-white px-6 py-10 mt-4">
+  <h2 class="text-[1.7rem] font-bold">Your next offer, ready to post today</h2>
+  <p class="mt-2 text-[#f0dcc6]">Type it once and see every design free, in about a minute.</p>
   <a href="/create" class="mt-6 inline-flex items-center justify-center bg-marigold hover:bg-marigold-light text-brand-deep font-bold px-7 rounded-md text-lg min-h-[54px]">Make my free preview</a>
 </section>
 {% endblock %}

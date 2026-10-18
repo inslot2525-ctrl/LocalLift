@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#7a1f1f">
-  <title>{% block title %}LocalLift: Diwali posters and WhatsApp messages for your shop{% endblock %}</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M4 19h24c0 5-5.4 8-12 8S4 24 4 19z' fill='%237a1f1f'/%3E%3Cpath d='M16 4c3 4.5 4 7.5 4 9.5a4 4 0 0 1-8 0C12 11.5 13 8.5 16 4z' fill='%23e09a2b'/%3E%3C/svg%3E">
+  <title>{% block title %}LocalLift: offer posters and WhatsApp messages for your shop{% endblock %}</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='2' width='28' height='28' rx='7' fill='%237a1f1f'/%3E%3Cpath d='M16 21V10M11 15l5-5 5 5' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
   <script src="https://cdn.tailwindcss.com/3.4.16"></script>
   <script>
     tailwind.config = { theme: { extend: {
@@ -33,21 +33,13 @@
     table th,table td{padding:.55rem .5rem}
     table th{font-weight:600;font-size:.85rem}
     input[type=checkbox],input[type=radio]{accent-color:#7a1f1f;width:1.2rem;height:1.2rem;flex-shrink:0}
-    /* bunting (toran) strip: alternating marigold and maroon pennants */
-    .toran{height:14px;background:
-      linear-gradient(135deg,#e09a2b 25%,transparent 25%) 0 0/28px 14px repeat-x,
-      linear-gradient(225deg,#e09a2b 25%,transparent 25%) 0 0/28px 14px repeat-x,
-      linear-gradient(135deg,#7a1f1f 25%,transparent 25%) 14px 0/28px 14px repeat-x,
-      linear-gradient(225deg,#7a1f1f 25%,transparent 25%) 14px 0/28px 14px repeat-x}
-    /* faint rangoli dots for dark festive panels */
-    .festive{background-color:#5e1616;background-image:
+    /* dark brand panel with a faint dot texture */
+    .panel{background-color:#5e1616;background-image:
       radial-gradient(circle at 1px 1px,rgba(246,194,91,.22) 1.5px,transparent 0),
       radial-gradient(ellipse at 85% 0%,rgba(224,154,43,.28),transparent 55%),
       radial-gradient(ellipse at 0% 100%,rgba(67,16,15,.9),transparent 60%);
       background-size:22px 22px,100% 100%,100% 100%}
     .poster{border-radius:10px;box-shadow:0 18px 40px -16px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.08)}
-    @media (prefers-reduced-motion:no-preference){.flicker{animation:flicker 2.6s ease-in-out infinite;transform-origin:50% 100%}
-      @keyframes flicker{0%,100%{transform:scale(1)}50%{transform:scale(1.08,0.94)}}}
   </style>
 </head>
 <body class="bg-paper text-ink min-h-screen flex flex-col">
@@ -55,10 +47,9 @@
     <div class="max-w-5xl mx-auto px-4 py-2 flex items-center justify-between gap-3">
       <a href="/" class="inline-flex items-center gap-2 min-h-[48px]" aria-label="LocalLift home">
         <svg viewBox="0 0 32 32" class="w-8 h-8" aria-hidden="true">
-          <path d="M4 19h24c0 5-5.4 8-12 8S4 24 4 19z" fill="#7a1f1f"/>
-          <path d="M8 19c1-1.6 4.3-2.4 8-2.4s7 .8 8 2.4" fill="none" stroke="#e09a2b" stroke-width="1.4"/>
-          <path class="flicker" d="M16 4c3 4.5 4 7.5 4 9.5a4 4 0 0 1-8 0C12 11.5 13 8.5 16 4z" fill="#e09a2b"/>
-          <path d="M16 9.5c1.3 2 1.7 3.2 1.7 4a1.7 1.7 0 0 1-3.4 0c0-.8.4-2 1.7-4z" fill="#fff4d6"/>
+          <rect x="2" y="2" width="28" height="28" rx="7" fill="#7a1f1f"/>
+          <path d="M9 22h14" stroke="#e09a2b" stroke-width="2.6" stroke-linecap="round"/>
+          <path d="M16 18V9M11.5 13.5 16 9l4.5 4.5" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
         <span class="font-serif font-bold text-[1.4rem] text-brand leading-none">LocalLift</span>
       </a>
@@ -67,15 +58,15 @@
         <a href="/create" class="text-base bg-brand hover:bg-brand-dark text-white font-semibold px-4 rounded-md inline-flex items-center min-h-[44px] shadow-card">Make my pack</a>
       </nav>
     </div>
-    <div class="toran" aria-hidden="true"></div>
+    <div class="h-[3px] bg-marigold" aria-hidden="true"></div>
   </header>
   {% block hero %}{% endblock %}
   <main class="{% block main_class %}max-w-3xl{% endblock %} w-full mx-auto px-4 py-7 flex-1">{% block content %}{% endblock %}</main>
-  <footer class="festive text-[#f3e3cf] mt-8">
+  <footer class="panel text-[#f3e3cf] mt-8">
     <div class="max-w-5xl mx-auto px-4 py-8 grid gap-6 sm:grid-cols-3">
       <div>
         <div class="font-serif font-bold text-xl text-marigold-light">LocalLift</div>
-        <p class="mt-1 text-[15px] opacity-90">Diwali offer posters and WhatsApp messages for local shops, in English, हिन्दी and मराठी.</p>
+        <p class="mt-1 text-[15px] opacity-90">Offer posters and WhatsApp messages for local shops, in English, हिन्दी and मराठी.</p>
       </div>
       <div class="text-[15px]">
         <div class="font-semibold text-marigold-light">Get started</div>
