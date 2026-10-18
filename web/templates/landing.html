@@ -1,22 +1,51 @@
 {% extends "base.html" %}
 {% block content %}
-<section class="text-center py-6">
-  <h1 class="text-3xl sm:text-4xl font-bold text-rose-900 leading-tight">Your Diwali offer, ready to post in 2 minutes</h1>
-  <p class="mt-3 text-lg text-stone-700">Posters for WhatsApp status, Instagram and print, plus ready-to-send WhatsApp messages, in English, हिन्दी and मराठी.</p>
-  <div class="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
-    <a href="/create" class="bg-rose-800 text-white font-semibold px-6 py-3 rounded-xl text-lg">Start my pack, free preview</a>
-    <a href="/sample" class="border-2 border-rose-800 text-rose-800 font-semibold px-6 py-3 rounded-xl text-lg">See a sample</a>
+<section class="pb-7">
+  <p class="text-sm font-semibold text-marigold-dark">For local shops · Diwali offer packs</p>
+  <h1 class="mt-1 text-[2rem] sm:text-[2.6rem] font-bold leading-[1.15] text-ink">Diwali posters and WhatsApp messages for your shop, in your language</h1>
+  <p class="mt-3 text-lg text-muted max-w-xl">Type your offer once. Get posters for WhatsApp status, Instagram and print, plus ready-to-send WhatsApp messages, in English, हिन्दी and मराठी.</p>
+  <div class="mt-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-5">
+    <a href="/create" class="bg-brand hover:bg-brand-dark text-white font-semibold px-6 rounded-md text-lg inline-flex items-center justify-center min-h-[52px]">Start my pack, free preview</a>
+    <a href="/sample" class="text-brand font-semibold underline underline-offset-4 decoration-2 inline-flex items-center justify-center min-h-[48px]">See a sample pack</a>
   </div>
+  <p class="mt-3 text-[15px] text-muted">Starter pack ₹{{ PLANS.starter.price }}. You see a watermarked preview first and pay only if you want the files.</p>
 </section>
-<section class="grid sm:grid-cols-3 gap-3 mt-6">
-  <div class="bg-white rounded-xl p-4 shadow-sm"><div class="font-semibold">1. Tell us your offer</div><p class="text-sm text-stone-600 mt-1">Shop name, phone, offer, language. 60 seconds.</p></div>
-  <div class="bg-white rounded-xl p-4 shadow-sm"><div class="font-semibold">2. See it free</div><p class="text-sm text-stone-600 mt-1">Watermarked previews of every design, in about a minute.</p></div>
-  <div class="bg-white rounded-xl p-4 shadow-sm"><div class="font-semibold">3. Pay by UPI, post today</div><p class="text-sm text-stone-600 mt-1">From ₹{{ PLANS.starter.price }}. Clean files in all sizes + messages.</p></div>
+
+<section class="border-t border-line py-7">
+  <h2 class="text-2xl font-bold">How it works</h2>
+  <ol class="mt-4 space-y-4">
+    <li class="flex gap-3"><span class="shrink-0 w-8 h-8 rounded-full border-2 border-brand text-brand font-bold flex items-center justify-center">1</span>
+      <div><div class="font-semibold">Tell us your offer</div><p class="text-muted">Shop name, phone, offer, language. About 60 seconds.</p></div></li>
+    <li class="flex gap-3"><span class="shrink-0 w-8 h-8 rounded-full border-2 border-brand text-brand font-bold flex items-center justify-center">2</span>
+      <div><div class="font-semibold">See it free</div><p class="text-muted">Watermarked previews of every design, usually in a minute or two.</p></div></li>
+    <li class="flex gap-3"><span class="shrink-0 w-8 h-8 rounded-full border-2 border-brand text-brand font-bold flex items-center justify-center">3</span>
+      <div><div class="font-semibold">Pay by UPI, then download</div><p class="text-muted">From ₹{{ PLANS.starter.price }}. We check the payment by hand, usually within a few hours, and your clean files and messages unlock.</p></div></li>
+  </ol>
 </section>
-<section class="mt-8 bg-white rounded-xl p-4 shadow-sm">
-  <h2 class="font-semibold text-rose-900">Prices</h2>
-  <ul class="mt-2 space-y-2 text-sm">
-    {% for key, p in PLANS.items() %}<li><span class="font-semibold">{{ p.name }}: ₹{{ p.price }}</span>. {{ p.desc }}.</li>{% endfor %}
+
+<section class="border-t border-line py-7">
+  <h2 class="text-2xl font-bold">What you get</h2>
+  <ul class="mt-3 space-y-2">
+    {% for key, label in SIZE_LABELS.items() %}
+    <li class="flex gap-3"><span class="mt-[0.6em] w-2 h-2 bg-marigold shrink-0"></span><span>Poster: {{ label }}</span></li>
+    {% endfor %}
+    <li class="flex gap-3"><span class="mt-[0.6em] w-2 h-2 bg-marigold shrink-0"></span><span>3 WhatsApp broadcast messages and 1 review request, in each language you pick</span></li>
+    <li class="flex gap-3"><span class="mt-[0.6em] w-2 h-2 bg-marigold shrink-0"></span><span>Your shop name, phone and offer on every poster, and your logo if you add one</span></li>
   </ul>
+  <p class="mt-4"><a href="/sample" class="text-brand font-semibold underline underline-offset-4 inline-flex items-center min-h-[44px]">Look at a sample pack for a made-up shop</a></p>
+</section>
+
+<section class="border-t border-line py-7">
+  <h2 class="text-2xl font-bold">Prices</h2>
+  <div class="mt-4 bg-card border border-line rounded-md divide-y divide-line">
+    {% for key, p in PLANS.items() %}
+    <div class="p-4 flex justify-between items-start gap-4">
+      <div><div class="font-semibold text-lg">{{ p.name }}</div><p class="text-muted mt-0.5">{{ p.desc }}.</p></div>
+      <div class="text-2xl font-bold whitespace-nowrap">₹{{ p.price }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  <p class="mt-3 text-muted">One-time payment by UPI. No subscription, no card needed.</p>
+  <a href="/create" class="mt-5 bg-brand hover:bg-brand-dark text-white font-semibold px-6 rounded-md text-lg inline-flex items-center justify-center min-h-[52px] w-full sm:w-auto">Start my pack, free preview</a>
 </section>
 {% endblock %}

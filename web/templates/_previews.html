@@ -1,36 +1,41 @@
 {% if not done %}
 <div hx-get="/o/{{ order.view_token }}/status" hx-trigger="every 2s" hx-target="#previews" hx-swap="innerHTML">
-  <div class="bg-white rounded-xl p-4 shadow-sm">
+  <div class="bg-card border border-line rounded-md p-4 mb-6">
     <div class="font-semibold">Making your pack… {{ progress }} of {{ expected }} items ready</div>
-    <div class="mt-2 h-3 bg-stone-200 rounded-full overflow-hidden"><div class="h-3 bg-rose-700" style="width: {{ (100 * progress / expected)|round|int }}%"></div></div>
-    <p class="text-sm text-stone-500 mt-2">This usually takes about a minute. Keep this page open.</p>
+    <div class="mt-3 h-2.5 bg-line rounded-sm overflow-hidden"><div class="h-2.5 bg-marigold transition-all" style="width: {{ (100 * progress / expected)|round|int }}%"></div></div>
+    <p class="text-[15px] text-muted mt-2">This usually takes a minute or two. Keep this page open.</p>
   </div>
 </div>
 {% endif %}
 {% if not order.is_sample and order.status in ('preview', 'rejected') and done %}
-<a href="/pay/{{ order.view_token }}" class="block text-center bg-rose-800 text-white font-semibold py-4 rounded-xl text-lg mb-5">Unlock clean files: from ₹{{ PLANS.starter.price }} by UPI</a>
+<div class="bg-card border border-line rounded-md p-4 mb-6">
+  <p class="text-muted">Happy with the designs? The clean files have no watermark.</p>
+  <a href="/pay/{{ order.view_token }}" class="mt-3 flex items-center justify-center text-center bg-brand hover:bg-brand-dark text-white font-semibold min-h-[56px] px-4 rounded-md text-lg">Unlock clean files: from ₹{{ PLANS.starter.price }} by UPI</a>
+</div>
 {% endif %}
 {% set squares = posters | selectattr('size', 'equalto', 'square') | list %}
 {% if squares %}
-<h2 class="font-semibold text-lg">Poster previews</h2>
-<p class="text-sm text-stone-600">Each design also comes as a WhatsApp status (tall) and an A4 print file. The starter pack includes the Diya design; the festive bundle includes all three.</p>
+<h2 class="text-xl font-bold">Poster previews</h2>
+<p class="text-[15px] text-muted mt-1">Each design also comes as a WhatsApp status (tall) and an A4 print file. The starter pack includes the Diya design; the festive bundle includes all three.</p>
 <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-3">
   {% for p in squares %}
-  <figure class="bg-white rounded-lg p-1 shadow-sm">
-    <img src="/o/{{ order.view_token }}/img/{{ p.id }}" loading="lazy" alt="{{ p.template_id }} design, {{ p.language }}" class="w-full rounded">
-    <figcaption class="text-xs text-stone-600 px-1 py-1">{{ p.template_id|capitalize }} · {{ LANGUAGES[p.language] }}{% if p.template_id != 'diya' %} · bundle{% endif %}</figcaption>
+  <figure class="bg-card border border-line rounded-md overflow-hidden">
+    <img src="/o/{{ order.view_token }}/img/{{ p.id }}" loading="lazy" alt="{{ p.template_id }} design, {{ p.language }}" class="w-full block aspect-square object-cover bg-line">
+    <figcaption class="text-sm px-2 py-1.5 flex flex-wrap items-center gap-x-1.5"><span class="font-semibold">{{ p.template_id|capitalize }}</span><span class="text-muted">· {{ LANGUAGES[p.language] }}</span>{% if p.template_id != 'diya' %}<span class="text-xs font-semibold text-marigold-dark bg-marigold-soft px-1.5 rounded-sm">bundle</span>{% endif %}</figcaption>
   </figure>
   {% endfor %}
 </div>
 {% set tall = posters | selectattr('size', 'equalto', 'status') | list %}
-{% if tall %}<details class="mt-3"><summary class="cursor-pointer text-sm font-semibold text-rose-900 py-3">Show WhatsApp status versions</summary>
-<div class="grid grid-cols-3 gap-2 mt-2">{% for p in tall %}<img src="/o/{{ order.view_token }}/img/{{ p.id }}" loading="lazy" alt="status {{ p.template_id }} {{ p.language }}" class="w-full rounded">{% endfor %}</div></details>{% endif %}
+{% if tall %}<details class="mt-3 bg-card border border-line rounded-md"><summary class="cursor-pointer font-semibold text-brand px-4 min-h-[48px] flex items-center">Show WhatsApp status versions</summary>
+<div class="grid grid-cols-3 gap-2 p-3 pt-0">{% for p in tall %}<img src="/o/{{ order.view_token }}/img/{{ p.id }}" loading="lazy" alt="status {{ p.template_id }} {{ p.language }}" class="w-full block rounded-sm border border-line">{% endfor %}</div></details>{% endif %}
 {% endif %}
 {% set wa = messages | selectattr('template_id', 'equalto', 'wa1') | list %}
 {% if wa %}
-<h2 class="font-semibold text-lg mt-6">WhatsApp messages</h2>
-<p class="text-sm text-stone-600">Here is the first one. The pack has 3 broadcast messages and a review request per language.</p>
+<h2 class="text-xl font-bold mt-8">WhatsApp messages</h2>
+<p class="text-[15px] text-muted mt-1">Here is the first one. The pack has 3 broadcast messages and a review request per language.</p>
+<div class="mt-3 bg-[#ece5dd] rounded-md p-3 space-y-3">
 {% for m in wa %}
-<div class="mt-2 bg-[#dcf8c6] rounded-lg p-3 whitespace-pre-line text-sm">{{ m.body }}</div>
+<div class="bg-[#dcf8c6] rounded-md rounded-tr-none p-3 whitespace-pre-line text-[15px] max-w-[92%] ml-auto shadow-[0_1px_0_rgba(0,0,0,0.08)]">{{ m.body }}</div>
 {% endfor %}
+</div>
 {% endif %}

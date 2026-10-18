@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% block title %}Funnel{% endblock %}
 {% block content %}
-<p><a class="underline text-sm inline-block py-2" href="/admin">← Admin</a></p>
+<p><a class="underline text-sm inline-flex items-center min-h-[44px]" href="/admin">← Admin</a></p>
 <h1 class="text-xl font-bold">Funnel (real orders only, samples excluded)</h1>
-<table class="text-sm w-full bg-white mt-4">
-<tr class="text-left bg-stone-100"><th class="p-2">Step</th><th>Events</th><th>Distinct orders</th></tr>
-{% for f in funnel %}<tr class="border-t"><td class="p-2">{{ f.kind }}</td><td>{{ f.events }}</td><td>{{ f.orders }}</td></tr>{% endfor %}
+<table class="text-sm w-full bg-card border border-line mt-4">
+<tr class="text-left bg-paper text-muted"><th class="p-2">Step</th><th>Events</th><th>Distinct orders</th></tr>
+{% for f in funnel %}<tr class="border-t border-line"><td class="p-2">{{ f.kind }}</td><td>{{ f.events }}</td><td>{{ f.orders }}</td></tr>{% endfor %}
 </table>
-<p class="text-xs text-stone-500 mt-2">visit and form_start count page loads, not unique people. Other steps count orders.</p>
+<p class="text-xs text-muted mt-2">visit and form_start count page loads, not unique people. Other steps count orders.</p>
 {% endblock %}

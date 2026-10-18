@@ -1,31 +1,44 @@
 {% extends "base.html" %}
+{% block title %}Pay · LocalLift{% endblock %}
 {% block content %}
-<h1 class="text-2xl font-bold text-rose-900">Unlock your pack</h1>
-<p class="text-stone-600">{{ order.shop_name }}</p>
-<div class="mt-4 space-y-2">
+<p class="text-sm text-muted"><a class="underline inline-flex items-center min-h-[44px]" href="/o/{{ order.view_token }}">← Back to previews</a></p>
+<h1 class="text-[1.75rem] font-bold leading-tight">Unlock your pack</h1>
+<p class="text-muted mt-1">{{ order.shop_name }}</p>
+
+<h2 class="text-lg font-bold mt-6">1. Choose a pack</h2>
+<div class="mt-2 space-y-2">
   {% for key, p in PLANS.items() %}
-  <a href="/pay/{{ order.view_token }}?plan={{ key }}" class="flex justify-between items-center border-2 rounded-xl p-3 {% if key == plan %}border-rose-800 bg-white{% else %}border-stone-200{% endif %}">
-    <span><span class="font-semibold">{{ p.name }}</span><br><span class="text-xs text-stone-600">{{ p.desc }}</span></span>
-    <span class="text-xl font-bold ml-3">₹{{ p.price }}</span></a>
+  <a href="/pay/{{ order.view_token }}?plan={{ key }}" class="flex justify-between items-start gap-3 border rounded-md p-3 {% if key == plan %}border-brand border-2 bg-brand-soft{% else %}border-line bg-card{% endif %}">
+    <span class="flex gap-3"><span class="mt-1 w-5 h-5 shrink-0 rounded-full border-2 {% if key == plan %}border-brand bg-brand shadow-[inset_0_0_0_3px_#f7ebe6]{% else %}border-stone-400{% endif %}"></span>
+      <span><span class="font-semibold">{{ p.name }}</span><span class="block text-[15px] text-muted leading-snug mt-0.5">{{ p.desc }}</span></span></span>
+    <span class="text-xl font-bold whitespace-nowrap">₹{{ p.price }}</span></a>
   {% endfor %}
 </div>
-<div class="mt-5 bg-white rounded-xl p-4 shadow-sm text-center">
+
+<h2 class="text-lg font-bold mt-6">2. Pay by UPI</h2>
+<div class="mt-2 bg-card border border-line rounded-md p-4">
   {% if upi %}
-    <div class="font-semibold">Pay ₹{{ amount }} by UPI</div>
-    <a href="{{ upi }}" class="mt-3 block w-full sm:inline-block sm:w-auto bg-rose-800 text-white font-semibold px-6 py-3.5 rounded-xl">Open UPI app</a>
-    <p class="text-sm text-stone-600 mt-3">or scan with any UPI app:</p>
-    <img src="{{ qr }}" alt="UPI QR code" class="mx-auto mt-2 w-48 h-48">
-    <p class="text-sm mt-2">UPI ID: <b class="select-all">{{ vpa }}</b> · Amount: <b>₹{{ amount }}</b></p>
+    <div class="flex justify-between items-baseline gap-3"><span class="text-muted">Amount</span><span class="text-2xl font-bold">₹{{ amount }}</span></div>
+    <a href="{{ upi }}" class="mt-3 flex items-center justify-center w-full sm:w-auto sm:inline-flex bg-brand hover:bg-brand-dark text-white font-semibold px-6 min-h-[52px] rounded-md text-lg">Open UPI app</a>
+    <p class="text-[15px] text-muted mt-4 text-center">or scan with any UPI app (GPay, PhonePe, Paytm, BHIM):</p>
+    <img src="{{ qr }}" alt="UPI QR code" class="mx-auto mt-2 w-52 h-52 border border-line rounded-md p-1 bg-white">
+    <dl class="mt-3 text-[15px] grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 max-w-xs mx-auto">
+      <dt class="text-muted">UPI ID</dt><dd><b class="select-all break-all">{{ vpa }}</b></dd>
+      <dt class="text-muted">Amount</dt><dd><b>₹{{ amount }}</b></dd>
+    </dl>
   {% else %}
-    <p class="text-red-800">Payments are not set up yet on this server.</p>
+    <p class="text-brand">Payments are not set up yet on this server.</p>
   {% endif %}
 </div>
-<form method="post" action="/pay/{{ order.view_token }}" class="mt-5 space-y-3">
+
+<form method="post" action="/pay/{{ order.view_token }}" class="mt-6 space-y-3">
+  <h2 class="text-lg font-bold">3. Tell us the transaction ID</h2>
   <input type="hidden" name="plan" value="{{ plan }}">
-  {% if error %}<div class="bg-red-100 border border-red-300 text-red-900 rounded-lg p-3 text-sm">{{ error }}</div>{% endif %}
+  {% if error %}<div class="bg-brand-soft border border-brand/30 border-l-4 border-l-brand text-brand-dark rounded-md p-3" role="alert">{{ error }}</div>{% endif %}
   <label class="block"><span class="font-semibold">After paying, enter the UPI transaction ID (UTR)</span>
-    <input name="payment_ref" required maxlength="40" placeholder="e.g. 4321 5678 9012" class="mt-1 w-full rounded-lg border-stone-300 border p-3 text-lg"></label>
-  <button class="w-full bg-rose-800 text-white font-semibold py-4 rounded-xl text-lg">I have paid</button>
-  <p class="text-xs text-stone-500">We check each payment by hand, usually within a few hours, then your download link appears on your order page.</p>
+    <input name="payment_ref" required maxlength="40" placeholder="e.g. 4321 5678 9012" class="mt-1 w-full rounded-md border border-line bg-card px-3 py-3 text-lg font-mono placeholder:text-stone-400 focus:border-brand">
+    <span class="block mt-1 text-sm text-muted">Usually a 12-digit number, shown in your UPI app's payment details.</span></label>
+  <button class="w-full bg-brand hover:bg-brand-dark text-white font-semibold min-h-[56px] rounded-md text-lg">I have paid</button>
+  <p class="text-[15px] text-muted">We check each payment by hand, usually within a few hours, then your download link appears on your order page.</p>
 </form>
 {% endblock %}
