@@ -34,7 +34,12 @@ Add to this list whenever we find something. Current list:
 - Self-referrals cannot be detected automatically (reps have no phone field to compare with); the admin reviews commissions before payout.
 - The rate limit (orders per IP per hour) lives in memory, so it resets on every deploy and does not work across several instances.
 - Preview and order pages use an unguessable token, but anyone who has the link can see the preview and, once paid, the download page. There are no accounts.
-- The free Render Postgres plan expires after 30 days and has no backups.
+- The free Render Postgres plan expires after 30 days (this one on Nov 17, 2026) and has no backups.
+- The live web service runs on Render's free plan for now (the paid plan needs a card on the account). Free instances sleep after about 15 minutes idle, so the first visit after a quiet spell takes about a minute to load.
+- On the free plan, packs render inside the web service on a small CPU share: the first live smoke-test order (2 languages, 18 posters plus messages) took 139 s from order to all previews, against 6 s on a laptop. A shop owner watching a live demo waits over two minutes.
+- Phone-width layout was checked in headless Chromium with mobile emulation at 360 and 390 px (no horizontal scroll on any page, tap targets enlarged to about 44 px), not on a real phone. Admin tables scroll sideways on a phone. The download page for a 3-design, 2-language bundle is long (18 poster rows).
+- Tailwind, htmx and fonts load from public CDNs, so a page loaded on a weak connection can show unstyled for a moment.
+- Render Workflows Python services run on Render's native Python runtime, not our Dockerfile, so `libfribidi0` (needed for correct Hindi/Marathi shaping) may be missing there. This has to be checked on the first Workflows run before we claim it works.
 - [TODO: add anything found during the build]
 
 ## How we used Render Workflows
@@ -43,7 +48,7 @@ Add to this list whenever we find something. Current list:
 
 ## Traction (due Oct 25, 11:59 PM IST)
 
-Only real, exported data. Redact personal payment details.
+Only real, exported data. Redact personal payment details. Exclude test data: on the live database, order 1 ("Smoke Test Store", rep `SMOKE`, deactivated) is our own smoke test, not a sale.
 
 | Date | Shop (if consented) | Rep | Plan | Amount (Rs) | Outcome | Evidence |
 |---|---|---|---|---|---|---|
@@ -53,6 +58,6 @@ Funnel summary: conversations [TODO], demos [TODO], paid orders [TODO], repeat o
 
 ## Links
 
-- Live URL: [TODO]
-- Repo: [TODO]
+- Live URL: https://locallift-web-jp8m.onrender.com (try `/sample` for a demo pack with no payment)
+- Repo: https://github.com/inslot2525-ctrl/LocalLift
 - Demo video: [TODO]
