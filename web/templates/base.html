@@ -5,18 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#7a1f1f">
   <title>{% block title %}LocalLift: Diwali posters and WhatsApp messages for your shop{% endblock %}</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M4 19h24c0 5-5.4 8-12 8S4 24 4 19z' fill='%237a1f1f'/%3E%3Cpath d='M16 4c3 4.5 4 7.5 4 9.5a4 4 0 0 1-8 0C12 11.5 13 8.5 16 4z' fill='%23e09a2b'/%3E%3C/svg%3E">
   <script src="https://cdn.tailwindcss.com/3.4.16"></script>
   <script>
     tailwind.config = { theme: { extend: {
       colors: {
         paper: '#faf6ef', card: '#ffffff', ink: '#24201c', muted: '#62594f', line: '#e4dacb',
-        brand: { DEFAULT: '#7a1f1f', dark: '#5e1616', soft: '#f7ebe6' },
-        marigold: { DEFAULT: '#e09a2b', soft: '#fcf0da', dark: '#8a5a0f' },
+        brand: { DEFAULT: '#7a1f1f', dark: '#5e1616', deep: '#43100f', soft: '#f7ebe6' },
+        marigold: { DEFAULT: '#e09a2b', soft: '#fcf0da', dark: '#8a5a0f', light: '#f6c25b' },
       },
       fontFamily: {
         sans: ['Mukta', '"Noto Sans Devanagari"', 'system-ui', 'sans-serif'],
         serif: ['"Source Serif 4"', 'Georgia', 'serif'],
       },
+      boxShadow: { card: '0 1px 2px rgba(67,16,15,.06), 0 8px 24px -12px rgba(67,16,15,.18)' },
     } } };
   </script>
   <script src="https://unpkg.com/htmx.org@1.9.12"></script>
@@ -25,26 +27,65 @@
   <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
   <style>
     body{font-family:Mukta,'Noto Sans Devanagari',system-ui,sans-serif;font-size:17px;line-height:1.55;-webkit-text-size-adjust:100%}
-    h1,h2,.font-serif{font-family:'Source Serif 4',Georgia,serif;letter-spacing:-0.005em}
+    h1,h2,h3,.font-serif{font-family:'Source Serif 4',Georgia,serif;letter-spacing:-0.005em}
     input,textarea{font:inherit}
     a:focus-visible,button:focus-visible,summary:focus-visible,input:focus,textarea:focus{outline:2px solid #e09a2b;outline-offset:2px}
     table th,table td{padding:.55rem .5rem}
     table th{font-weight:600;font-size:.85rem}
     input[type=checkbox],input[type=radio]{accent-color:#7a1f1f;width:1.2rem;height:1.2rem;flex-shrink:0}
+    /* bunting (toran) strip: alternating marigold and maroon pennants */
+    .toran{height:14px;background:
+      linear-gradient(135deg,#e09a2b 25%,transparent 25%) 0 0/28px 14px repeat-x,
+      linear-gradient(225deg,#e09a2b 25%,transparent 25%) 0 0/28px 14px repeat-x,
+      linear-gradient(135deg,#7a1f1f 25%,transparent 25%) 14px 0/28px 14px repeat-x,
+      linear-gradient(225deg,#7a1f1f 25%,transparent 25%) 14px 0/28px 14px repeat-x}
+    /* faint rangoli dots for dark festive panels */
+    .festive{background-color:#5e1616;background-image:
+      radial-gradient(circle at 1px 1px,rgba(246,194,91,.22) 1.5px,transparent 0),
+      radial-gradient(ellipse at 85% 0%,rgba(224,154,43,.28),transparent 55%),
+      radial-gradient(ellipse at 0% 100%,rgba(67,16,15,.9),transparent 60%);
+      background-size:22px 22px,100% 100%,100% 100%}
+    .poster{border-radius:10px;box-shadow:0 18px 40px -16px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.08)}
+    @media (prefers-reduced-motion:no-preference){.flicker{animation:flicker 2.6s ease-in-out infinite;transform-origin:50% 100%}
+      @keyframes flicker{0%,100%{transform:scale(1)}50%{transform:scale(1.08,0.94)}}}
   </style>
 </head>
 <body class="bg-paper text-ink min-h-screen flex flex-col">
-  <header class="bg-card border-b border-line">
-    <div class="max-w-3xl mx-auto px-4 py-2 flex items-center justify-between gap-3">
-      <a href="/" class="font-serif font-bold text-[1.35rem] text-brand inline-flex items-center min-h-[44px]">LocalLift</a>
-      <a href="/create" class="text-base bg-brand hover:bg-brand-dark text-white font-semibold px-4 rounded-md inline-flex items-center min-h-[44px]">Make my pack</a>
+  <header class="bg-card">
+    <div class="max-w-5xl mx-auto px-4 py-2 flex items-center justify-between gap-3">
+      <a href="/" class="inline-flex items-center gap-2 min-h-[48px]" aria-label="LocalLift home">
+        <svg viewBox="0 0 32 32" class="w-8 h-8" aria-hidden="true">
+          <path d="M4 19h24c0 5-5.4 8-12 8S4 24 4 19z" fill="#7a1f1f"/>
+          <path d="M8 19c1-1.6 4.3-2.4 8-2.4s7 .8 8 2.4" fill="none" stroke="#e09a2b" stroke-width="1.4"/>
+          <path class="flicker" d="M16 4c3 4.5 4 7.5 4 9.5a4 4 0 0 1-8 0C12 11.5 13 8.5 16 4z" fill="#e09a2b"/>
+          <path d="M16 9.5c1.3 2 1.7 3.2 1.7 4a1.7 1.7 0 0 1-3.4 0c0-.8.4-2 1.7-4z" fill="#fff4d6"/>
+        </svg>
+        <span class="font-serif font-bold text-[1.4rem] text-brand leading-none">LocalLift</span>
+      </a>
+      <nav class="flex items-center gap-1 sm:gap-4">
+        <a href="/sample" class="hidden sm:inline-flex items-center min-h-[44px] px-2 font-semibold text-muted hover:text-brand">See a sample</a>
+        <a href="/create" class="text-base bg-brand hover:bg-brand-dark text-white font-semibold px-4 rounded-md inline-flex items-center min-h-[44px] shadow-card">Make my pack</a>
+      </nav>
     </div>
-    <div class="h-[3px] bg-marigold"></div>
+    <div class="toran" aria-hidden="true"></div>
   </header>
-  <main class="max-w-3xl w-full mx-auto px-4 py-6 flex-1">{% block content %}{% endblock %}</main>
-  <footer class="border-t border-line mt-6">
-    <div class="max-w-3xl mx-auto px-4 py-5 text-sm text-muted">
-      LocalLift collects only your shop name, phone, offer text and optional logo, to make your pack.
+  {% block hero %}{% endblock %}
+  <main class="{% block main_class %}max-w-3xl{% endblock %} w-full mx-auto px-4 py-7 flex-1">{% block content %}{% endblock %}</main>
+  <footer class="festive text-[#f3e3cf] mt-8">
+    <div class="max-w-5xl mx-auto px-4 py-8 grid gap-6 sm:grid-cols-3">
+      <div>
+        <div class="font-serif font-bold text-xl text-marigold-light">LocalLift</div>
+        <p class="mt-1 text-[15px] opacity-90">Diwali offer posters and WhatsApp messages for local shops, in English, हिन्दी and मराठी.</p>
+      </div>
+      <div class="text-[15px]">
+        <div class="font-semibold text-marigold-light">Get started</div>
+        <a href="/create" class="block py-1.5 hover:underline">Make my pack</a>
+        <a href="/sample" class="block py-1.5 hover:underline">See a sample pack</a>
+      </div>
+      <div class="text-[15px] opacity-90">
+        <div class="font-semibold text-marigold-light">Your data</div>
+        <p class="mt-1">We collect only your shop name, phone, offer text and optional logo, to make your pack.</p>
+      </div>
     </div>
   </footer>
 </body>

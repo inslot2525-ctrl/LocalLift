@@ -1,39 +1,74 @@
 {% extends "base.html" %}
 {% block title %}Make your Diwali pack · LocalLift{% endblock %}
+{% block main_class %}max-w-5xl{% endblock %}
 {% block content %}
-<h1 class="text-[1.75rem] font-bold leading-tight">Make your Diwali pack</h1>
-<p class="text-muted mt-1">The preview is free. You pay only if you like it.</p>
-{% if errors %}<div class="mt-4 bg-brand-soft border border-brand/30 border-l-4 border-l-brand text-brand-dark rounded-md p-3" role="alert"><div class="font-semibold">Please fix this:</div>{% for e in errors %}<div>{{ e }}</div>{% endfor %}</div>{% endif %}
-<form method="post" action="/create" enctype="multipart/form-data" class="mt-6 space-y-6">
-  <label class="block"><span class="font-semibold">Shop name</span>
-    <input name="shop_name" required maxlength="50" value="{{ form.shop_name or '' }}" placeholder="e.g. Sharma Sweets" class="mt-1 w-full rounded-md border border-line bg-card px-3 py-3 text-lg placeholder:text-stone-400 focus:border-brand"></label>
-  <label class="block"><span class="font-semibold">Phone number for customers</span>
-    <input name="phone" required inputmode="tel" maxlength="20" value="{{ form.phone or '' }}" placeholder="98765 43210" class="mt-1 w-full rounded-md border border-line bg-card px-3 py-3 text-lg placeholder:text-stone-400 focus:border-brand">
-    <span class="block mt-1 text-sm text-muted">Printed on the poster and messages.</span></label>
-  <label class="block"><span class="font-semibold">Your Diwali offer</span>
-    <textarea name="offer_text" required maxlength="120" rows="2" placeholder="20% off on all sweet boxes above Rs 500" class="mt-1 w-full rounded-md border border-line bg-card px-3 py-3 text-lg placeholder:text-stone-400 focus:border-brand">{{ form.offer_text or '' }}</textarea>
-    <span class="block mt-1 text-sm text-muted">Write it in the language you want on the poster. Up to 120 characters.</span></label>
-  <fieldset><legend class="font-semibold">Languages</legend>
-    <div class="mt-2 flex flex-wrap gap-2">
-      {% for code, name in LANGUAGES.items() %}
-      <label class="flex items-center gap-2 bg-card border border-line rounded-md px-3 min-h-[48px] cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brand-soft"><input type="checkbox" name="languages" value="{{ code }}" {% if code in (form.languages or ['en', 'hi']) %}checked{% endif %}> {{ name }}</label>
-      {% endfor %}
-    </div></fieldset>
-  <input type="hidden" name="festival" value="diwali">
-  <fieldset><legend class="font-semibold">Pack</legend>
-    <div class="mt-2 space-y-2">
+<div class="max-w-2xl">
+  <p class="text-sm font-bold text-marigold-dark">FREE PREVIEW · ABOUT 60 SECONDS</p>
+  <h1 class="mt-1 text-[2rem] font-bold leading-tight">Make your Diwali pack</h1>
+  <p class="text-muted mt-1">Fill this in once. You see every design before you pay anything.</p>
+</div>
+
+<div class="mt-7 grid md:grid-cols-[1fr_300px] gap-8 items-start">
+<form method="post" action="/create" enctype="multipart/form-data" class="bg-card border border-line rounded-xl shadow-card p-5 sm:p-7 space-y-8">
+  {% if errors %}<div class="bg-brand-soft border border-brand/30 border-l-4 border-l-brand text-brand-dark rounded-md p-3" role="alert"><div class="font-semibold">Please fix this:</div>{% for e in errors %}<div>{{ e }}</div>{% endfor %}</div>{% endif %}
+
+  <fieldset class="space-y-5">
+    <legend class="flex items-center gap-3 text-lg font-bold font-serif"><span class="w-8 h-8 rounded-full bg-brand text-white text-base flex items-center justify-center font-sans">1</span>Your shop</legend>
+    <label class="block"><span class="font-semibold">Shop name</span>
+      <input name="shop_name" required maxlength="50" value="{{ form.shop_name or '' }}" placeholder="e.g. Sharma Sweets" class="mt-1 w-full rounded-md border border-line bg-paper/60 px-3 py-3 text-lg placeholder:text-stone-400 focus:border-brand focus:bg-white"></label>
+    <label class="block"><span class="font-semibold">Phone number for customers</span>
+      <input name="phone" required inputmode="tel" maxlength="20" value="{{ form.phone or '' }}" placeholder="98765 43210" class="mt-1 w-full rounded-md border border-line bg-paper/60 px-3 py-3 text-lg placeholder:text-stone-400 focus:border-brand focus:bg-white">
+      <span class="block mt-1 text-sm text-muted">Printed on the poster and messages.</span></label>
+    <label class="block"><span class="font-semibold">Logo <span class="font-normal text-muted">(optional)</span></span>
+      <input type="file" name="logo" accept="image/png,image/jpeg,image/webp" class="mt-2 block w-full text-base text-muted file:mr-3 file:min-h-[44px] file:px-4 file:rounded-md file:border file:border-line file:bg-paper file:text-ink file:font-semibold">
+      <span class="block mt-1 text-sm text-muted">PNG, JPG or WEBP, up to 2 MB.</span></label>
+  </fieldset>
+
+  <fieldset class="space-y-5 border-t border-line pt-7">
+    <legend class="flex items-center gap-3 text-lg font-bold font-serif"><span class="w-8 h-8 rounded-full bg-brand text-white text-base flex items-center justify-center font-sans">2</span>Your offer</legend>
+    <label class="block"><span class="font-semibold">Your Diwali offer</span>
+      <textarea name="offer_text" required maxlength="120" rows="2" placeholder="20% off on all sweet boxes above Rs 500" class="mt-1 w-full rounded-md border border-line bg-paper/60 px-3 py-3 text-lg placeholder:text-stone-400 focus:border-brand focus:bg-white">{{ form.offer_text or '' }}</textarea>
+      <span class="block mt-1 text-sm text-muted">Write it in the language you want on the poster. Up to 120 characters.</span></label>
+    <div><span class="font-semibold">Languages</span>
+      <div class="mt-2 flex flex-wrap gap-2">
+        {% for code, name in LANGUAGES.items() %}
+        <label class="flex items-center gap-2 bg-paper/60 border border-line rounded-full px-4 min-h-[48px] cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brand-soft has-[:checked]:font-semibold"><input type="checkbox" name="languages" value="{{ code }}" {% if code in (form.languages or ['en', 'hi']) %}checked{% endif %}> {{ name }}</label>
+        {% endfor %}
+      </div></div>
+    <input type="hidden" name="festival" value="diwali">
+  </fieldset>
+
+  <fieldset class="space-y-3 border-t border-line pt-7">
+    <legend class="flex items-center gap-3 text-lg font-bold font-serif"><span class="w-8 h-8 rounded-full bg-brand text-white text-base flex items-center justify-center font-sans">3</span>Pick a pack</legend>
+    <div class="grid sm:grid-cols-2 gap-3">
       {% for key, p in PLANS.items() %}
-      <label class="flex gap-3 bg-card border border-line rounded-md p-3 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brand-soft"><input type="radio" name="plan" value="{{ key }}" class="mt-1" {% if (form.plan or 'starter') == key %}checked{% endif %}>
-        <span class="flex-1"><span class="flex justify-between gap-3"><span class="font-semibold">{{ p.name }}</span><span class="font-bold whitespace-nowrap">₹{{ p.price }}</span></span><span class="block text-[15px] text-muted leading-snug mt-0.5">{{ p.desc }}</span></span></label>
+      <label class="flex flex-col gap-1 bg-paper/60 border border-line rounded-lg p-4 cursor-pointer has-[:checked]:border-brand has-[:checked]:border-2 has-[:checked]:bg-brand-soft">
+        <span class="flex items-center justify-between gap-3"><span class="flex items-center gap-2"><input type="radio" name="plan" value="{{ key }}" {% if (form.plan or 'starter') == key %}checked{% endif %}><span class="font-semibold">{{ p.name }}</span></span><span class="text-xl font-bold font-serif text-brand">₹{{ p.price }}</span></span>
+        <span class="text-[15px] text-muted leading-snug">{{ p.desc }}</span></label>
       {% endfor %}
     </div>
-    <span class="block mt-1 text-sm text-muted">You can change this before paying.</span></fieldset>
-  <label class="block"><span class="font-semibold">Logo <span class="font-normal text-muted">(optional)</span></span>
-    <input type="file" name="logo" accept="image/png,image/jpeg,image/webp" class="mt-2 block w-full text-base text-muted file:mr-3 file:min-h-[44px] file:px-4 file:rounded-md file:border file:border-line file:bg-card file:text-ink file:font-semibold">
-    <span class="block mt-1 text-sm text-muted">PNG, JPG or WEBP, up to 2 MB.</span></label>
-  <label class="block"><span class="font-semibold">Rep code <span class="font-normal text-muted">(optional)</span></span>
-    <input name="rep_code" maxlength="16" value="{{ rep }}" class="mt-1 w-full rounded-md border border-line bg-card px-3 py-3 uppercase focus:border-brand">
-    <span class="block mt-1 text-sm text-muted">If a LocalLift student rep helped you, enter their code.</span></label>
-  <button class="w-full bg-brand hover:bg-brand-dark text-white font-semibold min-h-[56px] rounded-md text-lg">Make my free preview</button>
+    <span class="block text-sm text-muted">You can change this before paying.</span>
+    <label class="block pt-2"><span class="font-semibold">Rep code <span class="font-normal text-muted">(optional)</span></span>
+      <input name="rep_code" maxlength="16" value="{{ rep }}" class="mt-1 w-full sm:w-56 rounded-md border border-line bg-paper/60 px-3 py-3 uppercase focus:border-brand focus:bg-white">
+      <span class="block mt-1 text-sm text-muted">If a LocalLift student rep helped you, enter their code.</span></label>
+  </fieldset>
+
+  <button class="w-full bg-brand hover:bg-brand-dark text-white font-semibold min-h-[58px] rounded-md text-lg shadow-card">Make my free preview</button>
 </form>
+
+<aside class="hidden md:block sticky top-6 space-y-4">
+  <div class="festive rounded-xl p-5 text-[#fbeee0]">
+    <img src="/showcase/diya/hi/status.jpg" alt="Sample poster" class="poster w-40 mx-auto">
+    <p class="mt-4 text-center text-sm text-[#e8cdb3]">A sample of what you will get</p>
+  </div>
+  <div class="bg-card border border-line rounded-xl p-5">
+    <h2 class="font-bold text-lg">What happens next</h2>
+    <ol class="mt-2 space-y-2 text-[15px] text-muted list-decimal pl-5">
+      <li>We make every design in your languages, usually in a minute or two.</li>
+      <li>You see watermarked previews, free.</li>
+      <li>If you like them, pay by UPI to unlock the clean files.</li>
+    </ol>
+  </div>
+</aside>
+</div>
 {% endblock %}

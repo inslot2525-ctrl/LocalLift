@@ -9,6 +9,7 @@ import time
 import zipfile
 from collections import defaultdict, deque
 from contextlib import asynccontextmanager
+from functools import lru_cache
 from pathlib import Path
 from urllib.parse import quote, urlencode
 
@@ -20,7 +21,9 @@ from fastapi.templating import Jinja2Templates
 from PIL import Image
 
 from pipeline.api import trigger_pack
+from pipeline.copywriter import fallback_copy
 from pipeline.pack import expected_count
+from pipeline.render_poster import TEMPLATES, render_item
 from shared.db import apply_schema, connect, log_event
 
 logging.basicConfig(level=logging.INFO)
@@ -115,6 +118,35 @@ def create_order(shop_name, phone, offer_text, languages, festival, plan, rep_co
 
 # ---------- public pages ----------
 
+SHOWCASE_OFFERS = {"en": "20% off on all sweet boxes above Rs 500",
+                   "hi": "500 रुपये से ऊपर के सभी मिठाई डिब्बों पर 20% छूट",
+                   "mr": "500 रुपयांवरील सर्व मिठाई बॉक्सवर 20% सूट"}
+
+
+@lru_cache(maxsize=32)
+def _showcase(template: str, lang: str, size: str) -> bytes:
+    order = {"shop_name": "Sharma Sweets", "phone": "98765 43210", "festival": "diwali",
+             "offer_text": SHOWCASE_OFFERS[lang]}
+    c = fallback_copy(order, lang)
+    png = render_item({**order, "headline": c["headline"], "cta": c["cta"], "language": lang,
+                       "size": size, "template_id": template})
+    img = Image.open(io.BytesIO(png)).convert("RGB")
+    img.thumbnail((480, 860), Image.LANCZOS)
+    buf = io.BytesIO()
+    img.save(buf, "JPEG", quality=82)
+    return buf.getvalue()
+
+
+@app.get("/showcase/{template}/{lang}/{size}.jpg")
+def showcase(template: str, lang: str, size: str):
+    """Sample posters for a made-up shop, for the landing page. Rendered by the real pipeline, cached.
+    Not watermarked: they sell nothing. Customer previews stay watermarked."""
+    if template not in TEMPLATES or lang not in SHOWCASE_OFFERS or size not in ("square", "status"):
+        raise HTTPException(404)
+    return Response(_showcase(template, lang, size), media_type="image/jpeg",
+                    headers={"Cache-Control": "public, max-age=86400"})
+
+
 @app.get("/healthz")
 def healthz():
     return {"ok": True}
@@ -123,7 +155,9 @@ def healthz():
 @app.get("/", response_class=HTMLResponse)
 def landing(request: Request):
     log_event("visit", meta={"path": "/"})
-    return render(request, "landing.html")
+    sample = fallback_copy({"shop_name": "Sharma Sweets", "phone": "98765 43210", "festival": "diwali",
+                            "offer_text": SHOWCASE_OFFERS["en"]}, "en")
+    return render(request, "landing.html", sample_message=sample["whatsapp"][0])
 
 
 @app.get("/r/{code}")
