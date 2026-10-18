@@ -39,13 +39,21 @@ Add to this list whenever we find something. Current list:
 - On the free plan, packs render inside the web service on a small CPU share: the first live smoke-test order (2 languages, 18 posters plus messages) took 139 s from order to all previews, against 6 s on a laptop. A shop owner watching a live demo waits over two minutes.
 - Phone-width layout was checked in headless Chromium with mobile emulation at 360 and 390 px (no horizontal scroll on any page, tap targets enlarged to about 44 px), not on a real phone. Admin tables scroll sideways on a phone. The download page for a 3-design, 2-language bundle is long (18 poster rows).
 - Tailwind, htmx and fonts load from public CDNs, so a page loaded on a weak connection can show unstyled for a moment.
-- Render Workflows can build from our Dockerfile (Language "Docker"), which installs `libfribidi0` for Hindi/Marathi shaping. But Docker-based workflows can only be created in the Dashboard (not from a Blueprint, the CLI or the API), and they cannot run locally with the Render CLI's task server. So the Workflow setup is a manual step, and the Workflows path has only been tested on Render itself. Hindi shaping must still be checked by eye on the first Workflows run.
+- Render Workflows can build from our Dockerfile (Language "Docker", which installs `libfribidi0` for Hindi/Marathi shaping), but Docker-based workflows can only be created in the Dashboard; through the API, CLI or a Blueprint only native runtimes are offered, where `libfribidi0` is missing. For a native Python service, a build step (`pipeline/vendor_fribidi.py`) downloads and hash-checks Debian's package; this works in a bare Python container but has not yet run on Render. Docker workflows also cannot run locally with the Render CLI's task server.
+- Render Workflows has not run on Render yet: creating the Workflow service returned `HTTP 402: Payment information is required` (Workflows bill per task-run and our workspace has no card). Until it does, every live pack renders inside the web service on the free CPU (see the 139 s figure above).
 - Words are never broken across lines. A shop name or offer with one very long word (for example a 48-letter name with no spaces) runs past the poster edge; QA marks every poster `failed` even after the simple-layout retry, and the shop has to shorten the name.
 - [TODO: add anything found during the build]
 
 ## How we used Render Workflows
 
-[TODO: Ayush to paste from `/pipeline/README.md`. Describe the parent task, the fan-out per language x size x template, the quality-check task, the bundle task, retries and idempotency, and what we learned.]
+**Status: written and tested locally, not yet run on Render.** Creating the Workflow service returned `HTTP 402: Payment information is required`; live packs currently render inside the web service. [TODO: replace with real run numbers if a card or credits get the service running before submission.]
+
+Design (`pipeline/workflow.py`, details in `pipeline/README.md`):
+- `generate_pack(order_id)` is the parent task. It runs `write_copy` (LLM copy with a human-written fallback), then fans out one `render_poster` task per language x size x design (18 for a 2-language order) in parallel, then `bundle_pack` audits the pack and records `preview_ready`.
+- Each `render_poster` run renders, runs our automatic QA (margins, overlap, contrast, phone and offer present, glyph coverage), retries once with a simpler layout if QA fails, and stores the poster plus a watermarked preview.
+- Per-task timeouts and retries with exponential backoff. Every task is idempotent (writes keyed on order, kind, language, size, design), so Render's retries and manual re-runs never duplicate items.
+- If Workflows cannot be started, the web app runs the same steps in a thread pool and logs which path ran (`runner: render_workflows` or `local`).
+- What we learned: Workflow services created through Render's API only offer native runtimes, so the Devanagari shaping library our Dockerfile installs is missing there; a hash-checked build step (`pipeline/vendor_fribidi.py`) supplies it.
 
 ## Traction (due Oct 25, 11:59 PM IST)
 
